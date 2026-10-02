@@ -1,0 +1,44 @@
+{
+  "name": "qa-automation",
+  "version": "1.0.0",
+  "description": "Automated QA for websites and web apps: crawls pages, tests desktop/tablet/mobile, and produces an annotated screenshot report with fixes.",
+  "type": "module",
+  "bin": {
+    "qa": "./bin/qa.js"
+  },
+  "scripts": {
+    "setup": "playwright install chromium",
+    "qa": "node bin/qa.js",
+    "demo": "node demo/run-demo.js",
+    "test": "node demo/run-demo.js"
+  },
+  "keywords": [
+    "qa",
+    "testing",
+    "playwright",
+    "accessibility",
+    "axe-core",
+    "visual-regression",
+    "e2e",
+    "web-audit"
+  ],
+  "homepage": "https://github.com/hasipfaruk/QA-Automation#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hasipfaruk/QA-Automation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hasipfaruk/QA-Automation/issues"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "@axe-core/playwright": "^4.13.0",
+    "pixelmatch": "^7.2.0",
+    "playwright": "^1.63.0",
+    "pngjs": "^7.0.0"
+  }
+}

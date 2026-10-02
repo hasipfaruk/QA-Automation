@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Acme</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="logo">ACME</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="#" class="icon-btn">x</a>
+</nav>
+<section class="hero">
+  <h1>Build faster with Acme</h1>
+  <h3>The all-in-one platform</h3>
+  <p class="tiny">Terms and conditions apply. Lorem ipsum dolor sit amet.</p>
+  <button class="cta" onclick="startTrial()">Start free trial</button>
+  <button class="cta2">Learn more</button>
+</section>
+<div class="wide-banner">Big promo banner that is wider than phones and causes sideways scrolling on mobile devices</div>
+<section class="features">
+  <div class="card"><img src="images/missing-feature.png"><h2>Fast</h2><p class="clip">Our platform is incredibly fast and this description is far too long to fit into the box it was placed in.</p></div>
+  <div class="card"><img src="images/photo.svg" class="stretch" alt="Team photo"><h2>Secure</h2><p style="color:#bbb">Light grey text with poor contrast on white.</p></div>
+  <div class="card"><input type="email" placeholder="Your email"><button>Go</button></div>
+</section>
+<footer><a href="https://example.com/this-page-does-not-exist-404">Old partner link</a></footer>
+<script>
+  fetch('/api/stats').then(r => r.json()).catch(() => {});
+  console.error('Analytics failed to initialise: token undefined');
+  function startTrial() { document.getElementById('trial-modal').classList.add('open'); }
+</script>
+</body>
+</html>

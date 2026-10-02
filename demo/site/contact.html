@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact Acme</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="nav"><a href="index.html" class="logo">ACME</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav>
+<main style="padding:24px;max-width:600px;margin:auto">
+  <h1>Contact us</h1>
+  <form id="contact" onsubmit="event.preventDefault(); send();">
+    <input id="name" placeholder="Name">
+    <input id="email" type="email" placeholder="Email">
+    <textarea id="msg" placeholder="Message"></textarea>
+    <button type="submit" id="send">Send message</button>
+  </form>
+  <div id="result"></div>
+</main>
+<script>
+  // BUG: success message never appears because of a typo
+  function send() { document.getElementById('reslt').textContent = 'Thank you! We will reply soon.'; }
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "url": "https://your-app.com",
+  "maxPages": 25,
+  "maxDepth": 3,
+  "viewports": ["desktop", "tablet", "mobile"],
+  "exclude": ["logout", "signout", "delete", "/admin/danger"],
+  "pages": ["/pricing", "/dashboard/settings"],
+  "concurrency": 3,
+  "checkExternalLinks": true,
+  "failOn": "critical",
+
+  "thresholds": {
+    "loadTimeMs": 3000,
+    "lcpMs": 2500,
+    "cls": 0.1,
+    "pageWeightKb": 3000,
+    "minTapTargetPx": 24,
+    "minFontPx": 12
+  },
+
+  "auth": {
+    "loginUrl": "/login",
+    "steps": [
+      { "fill": "input[name=email]", "value": "${ENV:QA_USER}" },
+      { "fill": "input[name=password]", "value": "${ENV:QA_PASSWORD}" },
+      { "click": "button[type=submit]" },
+      { "expectUrl": "/dashboard" }
+    ]
+  },
+
+  "flows": [
+    {
+      "name": "Search returns results",
+      "steps": [
+        { "goto": "/" },
+        { "fill": "input[type=search]", "value": "shoes" },
+        { "press": "Enter" },
+        { "expectVisible": ".search-results .item" }
+      ]
+    },
+    {
+      "name": "Add to cart on mobile",
+      "viewport": "mobile",
+      "steps": [
+        { "goto": "/products/1" },
+        { "click": "text=Add to cart" },
+        { "expectText": "Added to cart" }
+      ]
+    }
+  ],
+
+  "ai": { "enabled": false, "model": "claude-opus-5-5", "effort": "medium", "maxScreens": 20 },
+  "visual": { "enabled": false, "threshold": 0.5, "baselineDir": "qa-baselines" }
+}

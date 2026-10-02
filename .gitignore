@@ -1,0 +1,11 @@
+node_modules/
+reports/
+qa-baselines/
+qa.config.json
+auth-state.json
+.env
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

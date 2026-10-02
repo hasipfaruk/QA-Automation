@@ -1,0 +1,28 @@
+{
+  "maxPages": 10,
+  "viewports": ["desktop", "mobile"],
+  "outDir": "reports",
+  "failOn": "none",
+  "flows": [
+    {
+      "name": "Contact form sends a message",
+      "steps": [
+        { "goto": "/contact.html" },
+        { "fill": "#name", "value": "Test User" },
+        { "fill": "#email", "value": "test@example.com" },
+        { "fill": "#msg", "value": "Hello from the QA bot" },
+        { "click": "#send" },
+        { "expectText": "Thank you", "timeout": 4000 }
+      ]
+    },
+    {
+      "name": "Start free trial opens signup",
+      "viewport": "mobile",
+      "steps": [
+        { "goto": "/" },
+        { "click": "text=Start free trial" },
+        { "expectVisible": "#trial-modal", "timeout": 4000 }
+      ]
+    }
+  ]
+}
