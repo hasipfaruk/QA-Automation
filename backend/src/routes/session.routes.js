@@ -52,7 +52,7 @@ export function sessionRoutes({ db, config, auth, audit }) {
     const user = q.create.get(email, name, await hashPassword(req.body.password));
     auth.startSession(res, user.id);
     audit.record(req, 'user.signup', { actor: user, targetType: 'user', targetId: user.id });
-    res.status(201).json({ user: publicUser(user), redirect: '/app' });
+    res.status(201).json({ user: publicUser(user), redirect: '/app?notice=welcome' });
   });
 
   router.post('/auth/login', async (req, res) => {
@@ -70,7 +70,10 @@ export function sessionRoutes({ db, config, auth, audit }) {
     }
     auth.startSession(res, user.id);
     audit.record(req, 'user.login', { actor: user, targetType: 'user', targetId: user.id });
-    res.json({ user: publicUser(user), redirect: safeNextPath(req.body?.next) });
+    // Administrators work in the admin console; customers return to where they were going.
+    const next = safeNextPath(req.body?.next);
+    const redirect = user.role === 'admin' ? (next.startsWith('/app/admin') ? next : '/app/admin') : next;
+    res.json({ user: publicUser(user), redirect });
   });
 
   router.post('/auth/logout', (req, res) => {

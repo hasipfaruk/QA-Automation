@@ -1,6 +1,6 @@
 # Architecture
 
-QA Automation is a single Node.js service with a static frontend, a SQLite database and a background scan worker.
+Proofline is a single Node.js service with a static frontend, a SQLite database and a background scan worker.
 
 ```
   Browser (frontend/public)          CI pipelines and scripts

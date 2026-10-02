@@ -26,7 +26,7 @@ let worker;
 if (config.role === 'web' || config.role === 'all') {
   const app = createApp({ db, config });
   server = app.listen(config.port, config.host, () => {
-    console.log(`QA Automation running at ${config.appUrl} (role: ${config.role})`);
+    console.log(`Proofline running at ${config.appUrl} (role: ${config.role})`);
   });
 }
 

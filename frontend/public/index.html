@@ -1,397 +1,301 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>QA Automation | Automated testing for every web app</title>
-  <meta name="description" content="QA Automation crawls your web app, tests it on desktop, tablet and mobile, and delivers a report with annotated screenshots showing exactly what to fix.">
-  <meta property="og:title" content="QA Automation | Automated testing for every web app">
-  <meta property="og:description" content="Point it at a URL. Get a prioritised fix list with annotated screenshots in minutes.">
+  <title>Proofline | Automated QA for modern web teams</title>
+  <meta name="description" content="Proofline tests your web application in real browsers on every release. Catch broken user flows, accessibility failures, layout bugs and slow pages before your customers do.">
+  <meta property="og:title" content="Proofline | Automated QA for modern web teams">
+  <meta property="og:description" content="Real-browser QA on every release, with annotated reports that show exactly what to fix.">
   <meta property="og:image" content="/images/sample-report.jpg">
+  <meta name="theme-color" content="#08090c">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Stack+Sans+Headline:wght@400;500&family=Stack+Sans+Text:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
   <link rel="stylesheet" href="/css/site.css">
+  <script src="/js/site.js" defer></script>
 </head>
 <body>
-
-  <div class="announce" id="announce">
-    <p>Now available for teams: start a 14-day trial <a href="/signup">Get started</a></p>
-    <button class="announce__close" aria-label="Dismiss announcement" data-dismiss="announce">
-      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
-  </div>
+  <a class="sr-only" href="#main">Skip to content</a>
 
   <header class="nav" id="top">
     <div class="container nav__inner">
-      <a href="#top" class="logo" aria-label="QA Automation, home">
+      <a href="/" class="logo" aria-label="Proofline home">
         <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true">
-          <rect x="2" y="2" width="28" height="28" rx="9"/>
-          <path class="logo__check" d="M9.5 16.5l4.5 4.5 8.5-9.5"/>
+          <defs><linearGradient id="lg-nav" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b7bff"/><stop offset=".55" stop-color="#5b8cff"/><stop offset="1" stop-color="#2dd4bf"/></linearGradient></defs>
+          <rect width="32" height="32" rx="8" fill="url(#lg-nav)"/>
+          <path d="M9 16.5l4.2 4.2L23 10.8" fill="none" stroke="#0b0a14" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span>QA Automation</span>
+        <span>Proofline</span>
       </a>
-
       <nav class="nav__links" id="nav-links" aria-label="Main">
-        <a href="#features">Features</a>
-        <a href="#report">Sample report</a>
+        <a href="#product">Product</a>
         <a href="#how">How it works</a>
-        <a href="#platform">Platform</a>
+        <a href="#developers">Developers</a>
+        <a href="#security">Security</a>
         <a href="/pricing">Pricing</a>
-        <a href="#faq">FAQ</a>
       </nav>
-
       <div class="nav__actions">
-        <a href="/login" class="btn btn--soft btn--sm">Log in</a>
-        <a href="/signup" class="btn btn--dark btn--sm">Start trial</a>
-        <button class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
-          <span></span><span></span>
-        </button>
+        <a href="/login" class="btn btn--ghost btn--sm">Sign in</a>
+        <a href="/signup" class="btn btn--primary btn--sm">Start free trial</a>
+        <button class="nav__toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span></button>
       </div>
     </div>
   </header>
 
-  <main>
+  <main id="main">
 
     <!-- Hero -->
     <section class="hero">
-      <div class="container">
-        <span class="eyebrow reveal">Automated QA for web apps</span>
-        <h1 class="hero__title reveal">Catch every bug before your users do</h1>
-        <p class="hero__lead reveal">Point it at a URL. It crawls every page, tests desktop, tablet and mobile, and hands you a report that shows exactly what is broken and how to fix it.</p>
-        <div class="hero__cta reveal">
-          <a href="/signup" class="btn btn--dark">Start your free trial</a>
-          <a href="#report" class="btn btn--soft">See a sample report</a>
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="container hero__inner">
+        <a href="/signup" class="pill"><span class="badge badge--accent">New</span> AI design review is now available on Pro and above</a>
+        <h1 class="hero__title">Ship every release<br><span class="gradient-text">without the surprises.</span></h1>
+        <p class="hero__lead">Proofline tests your web application in real browsers on every release. It finds broken user flows, accessibility failures, layout bugs and slow pages, and shows your team exactly what to fix.</p>
+        <div class="hero__cta">
+          <a href="/signup" class="btn btn--primary btn--lg">Start 14-day free trial</a>
+          <a href="#report" class="btn btn--lg">See a sample report</a>
         </div>
+        <p class="hero__note faint small">No credit card required. Set up in under two minutes.</p>
       </div>
 
       <div class="container">
-        <div class="showcase reveal">
-          <div class="showcase__glow" aria-hidden="true"></div>
-
-          <div class="panel">
-            <div class="panel__bar">
-              <span class="dots"><i></i><i></i><i></i></span>
-              <span class="mono">scan / shop.example.com</span>
-              <span class="mono panel__score">Score 92</span>
-            </div>
-
-            <ul class="insights">
-              <li>
-                <span class="tile tile--mint">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>
-                </span>
-                <div>
-                  <strong>6 user flows passed</strong>
-                  <p>Sign up, login, search and checkout on desktop, tablet and mobile.</p>
-                </div>
-                <span class="tag tag--mint">PASS</span>
-              </li>
-              <li>
-                <span class="tile tile--peach">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
-                </span>
-                <div>
-                  <strong>Button overlaps on mobile</strong>
-                  <p>/checkout at 390px: "Pay now" sits under the cookie banner.</p>
-                </div>
-                <span class="tag tag--peach">HIGH</span>
-              </li>
-              <li>
-                <span class="tile tile--lavender">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4v16"/></svg>
-                </span>
-                <div>
-                  <strong>Low colour contrast</strong>
-                  <p>Footer links measure 2.4:1. WCAG AA needs 4.5:1.</p>
-                </div>
-                <span class="tag tag--lavender">A11Y</span>
-              </li>
-              <li>
-                <span class="tile tile--sand">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18l5-6 4 3 7-9"/></svg>
-                </span>
-                <div>
-                  <strong>Main content loads in 3.8s</strong>
-                  <p>Preload the hero image and defer two render-blocking scripts.</p>
-                </div>
-                <span class="tag tag--sand">PERF</span>
-              </li>
-            </ul>
-            <p class="panel__foot">Suggested fixes</p>
+        <div class="window" role="img" aria-label="Proofline scan result showing a quality score of 92 and a prioritised list of issues">
+          <div class="window__bar">
+            <span class="window__dots"><i></i><i></i><i></i></span>
+            <span class="window__url mono">Scans / staging.example.com / release 4.2</span>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Stack strip -->
-    <section class="tools">
-      <div class="container">
-        <p class="tools__label mono">WORKS WITH ANY STACK THAT RUNS IN A BROWSER</p>
-        <ul class="tools__list">
-          <li>React</li>
-          <li>Next.js</li>
-          <li>Vue</li>
-          <li>Angular</li>
-          <li>Svelte</li>
-          <li>WordPress</li>
-          <li>Shopify</li>
-          <li>Laravel</li>
-          <li>Django</li>
-          <li>Rails</li>
-          <li>ASP.NET</li>
-          <li>Spring</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section class="services" id="features">
-      <div class="container">
-
-        <article class="feature reveal">
-          <div class="feature__text">
-            <span class="eyebrow mono">USER FLOWS</span>
-            <h2>Automate the journeys that make you money</h2>
-            <p>Describe sign up, login, search or checkout as simple steps. Every run replays them in a real browser and captures a screenshot at each step, so a failure shows exactly where it broke.</p>
-            <a href="#how" class="link-arrow">How flows work
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-          <div class="feature__visual bg-mint">
-            <div class="mock">
-              <div class="mock__head mono">flows / production</div>
-              <ul class="runs">
-                <li><span class="ok"></span>Sign up <em>4.1s</em></li>
-                <li><span class="ok"></span>Login <em>1.2s</em></li>
-                <li><span class="ok"></span>Search returns results <em>0.9s</em></li>
-                <li><span class="fail"></span>Apply coupon <em>2.1s</em></li>
-                <li><span class="ok"></span>Checkout <em>3.4s</em></li>
+          <div class="window__body">
+            <aside class="mock-score">
+              <span class="faint small">Quality score</span>
+              <div class="mock-ring"><span>92</span></div>
+              <span class="badge badge--success badge--dot">Ready to ship</span>
+              <dl class="mock-stats">
+                <div><dt>Pages tested</dt><dd>48</dd></div>
+                <div><dt>Devices</dt><dd>4</dd></div>
+                <div><dt>User flows</dt><dd>6 / 6</dd></div>
+                <div><dt>Duration</dt><dd>2m 14s</dd></div>
+              </dl>
+            </aside>
+            <div class="mock-issues">
+              <div class="mock-issues__head"><b>Fix these first</b><span class="faint small">5 issues</span></div>
+              <ul>
+                <li><span class="sev sev--high">High</span><div><b>Pay button hidden behind cookie banner</b><span class="faint small">/checkout at 390px, mobile</span></div></li>
+                <li><span class="sev sev--high">High</span><div><b>Form field has no accessible label</b><span class="faint small">/signup, input#company, WCAG 1.3.1</span></div></li>
+                <li><span class="sev sev--medium">Medium</span><div><b>Largest Contentful Paint is 3.4 s</b><span class="faint small">/pricing, hero image not preloaded</span></div></li>
+                <li><span class="sev sev--medium">Medium</span><div><b>Text clipped inside plan card</b><span class="faint small">/pricing at 768px, tablet</span></div></li>
+                <li><span class="sev sev--low">Low</span><div><b>Missing social preview image</b><span class="faint small">/blog/launch</span></div></li>
               </ul>
-              <div class="mock__foot mono">4 passed, 1 failed at step 3</div>
             </div>
-          </div>
-        </article>
-
-        <article class="feature feature--flip reveal">
-          <div class="feature__text">
-            <span class="eyebrow mono">ACCESSIBILITY</span>
-            <h2>WCAG 2.2 audits on every page, automatically</h2>
-            <p>Contrast, labels, alt text, ARIA and keyboard issues are found on every page and every device, with the failing element highlighted and the code change that fixes it.</p>
-            <a href="#report" class="link-arrow">See it in a report
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-          <div class="feature__visual bg-lavender">
-            <div class="mock">
-              <div class="mock__head mono">contrast check</div>
-              <div class="swatches">
-                <div class="swatch">
-                  <span class="swatch__chip" style="background:#fff"><svg viewBox="0 0 40 24" width="40" height="24" role="img" aria-label="Light grey sample text on white"><text x="20" y="18" text-anchor="middle" fill="#b8b8b8" stroke="none" font-size="20" font-family="Stack Sans Headline, Arial, sans-serif">Aa</text></svg></span>
-                  <div><strong>2.1 : 1</strong><span class="tag tag--peach">FAIL</span></div>
-                </div>
-                <div class="swatch">
-                  <span class="swatch__chip" style="background:#fff;color:#4a4450">Aa</span>
-                  <div><strong>8.9 : 1</strong><span class="tag tag--mint">PASS</span></div>
-                </div>
-                <div class="swatch">
-                  <span class="swatch__chip" style="background:#231f23;color:#f7f6f5">Aa</span>
-                  <div><strong>15.6 : 1</strong><span class="tag tag--mint">PASS</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="feature reveal">
-          <div class="feature__text">
-            <span class="eyebrow mono">PERFORMANCE</span>
-            <h2>Know when a release makes your site slower</h2>
-            <p>Load time, Core Web Vitals and page weight are measured on every scan, with clear thresholds and fixes for oversized images, blocking scripts and layout shift.</p>
-            <a href="#platform" class="link-arrow">All checks
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-          <div class="feature__visual bg-sand">
-            <div class="mock">
-              <div class="mock__head mono">core web vitals</div>
-              <div class="bars">
-                <div class="bars__row"><span>LCP</span><div class="bar"><i style="--w:38%"></i></div><b>1.9s</b></div>
-                <div class="bars__row"><span>CLS</span><div class="bar"><i style="--w:12%"></i></div><b>0.03</b></div>
-                <div class="bars__row"><span>Load</span><div class="bar"><i style="--w:44%"></i></div><b>2.2s</b></div>
-                <div class="bars__row"><span>TTFB</span><div class="bar"><i style="--w:30%"></i></div><b>210ms</b></div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- Sample report -->
-    <section class="case" id="report">
-      <div class="container">
-        <div class="case__card reveal">
-          <div class="case__media">
-            <img src="/images/sample-report.jpg" width="900" height="542" alt="Sample QA Automation report with a quality score, issue counts and a prioritised fix list" loading="lazy">
-          </div>
-          <div class="case__body">
-            <span class="eyebrow eyebrow--light mono">SAMPLE REPORT</span>
-            <h2>Every bug marked on a screenshot, with the fix right next to it</h2>
-            <p>Each scan produces a quality score, a fix list ordered by impact, and page-by-page screenshots with numbered boxes on every problem. Export it as Markdown for your issue tracker or JSON for your own dashboards.</p>
-            <ul class="case__stats">
-              <li><b>9</b><span>check areas</span></li>
-              <li><b>4</b><span>device sizes</span></li>
-              <li><b>3</b><span>export formats</span></li>
-            </ul>
-            <a href="/signup" class="btn btn--light">Try it on your site
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- How it works (dark) -->
-    <section class="process" id="how">
+    <!-- Proof points -->
+    <section class="facts">
+      <div class="container facts__grid">
+        <div><b>9</b><span>categories of checks on every page</span></div>
+        <div><b>4</b><span>device profiles from 390 to 1440 px</span></div>
+        <div><b>WCAG 2.2</b><span>A and AA accessibility rules</span></div>
+        <div><b>REST API</b><span>to gate every deploy in CI</span></div>
+      </div>
+    </section>
+
+    <!-- Product -->
+    <section class="section" id="product">
       <div class="container">
-        <span class="eyebrow eyebrow--light mono">HOW IT WORKS</span>
-        <h2 class="section-title section-title--light reveal">From URL to fix list in four steps</h2>
+        <div class="section__head">
+          <span class="eyebrow">Product</span>
+          <h2>Everything a careful QA engineer checks, on every page, every time.</h2>
+          <p class="muted">Manual testing does not scale with release frequency. Proofline runs the full checklist automatically and ranks what it finds by impact.</p>
+        </div>
+        <div class="bento">
+          <article class="card card--wide">
+            <div class="card__icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l2 2 3-4"/></svg></div>
+            <h3>User flow automation</h3>
+            <p class="muted">Describe sign-up, checkout or search as simple steps. Proofline replays them in a real browser on every run and captures a screenshot at each step, so a failure shows exactly where it broke.</p>
+            <div class="flow-mock mono">
+              <span class="ok">pass</span> Sign up <i>4.1s</i><br>
+              <span class="ok">pass</span> Log in <i>1.2s</i><br>
+              <span class="bad">fail</span> Apply coupon <i>step 3: "Coupon applied" not visible</i><br>
+              <span class="ok">pass</span> Checkout <i>3.4s</i>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/></svg></div>
+            <h3>Accessibility</h3>
+            <p class="muted">WCAG 2.2 A and AA rules on every page and device, with the failing element highlighted and the fix explained.</p>
+          </article>
+          <article class="card">
+            <div class="card__icon"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
+            <h3>Performance</h3>
+            <p class="muted">Load time, Largest Contentful Paint, layout shift and page weight, with concrete fixes for oversized images and blocking scripts.</p>
+          </article>
+          <article class="card">
+            <div class="card__icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg></div>
+            <h3>Responsive layout</h3>
+            <p class="muted">Sideways scrolling, overlapping buttons, cut-off text and tiny tap targets on desktop, laptop, tablet and mobile.</p>
+          </article>
+          <article class="card">
+            <div class="card__icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/><path d="M13 7h4a2 2 0 0 1 2 2v2M11 17H7a2 2 0 0 1-2-2v-2"/></svg></div>
+            <h3>Visual regression</h3>
+            <p class="muted">Compare each release with an approved baseline and see a pixel diff of exactly what changed.</p>
+          </article>
+          <article class="card">
+            <div class="card__icon"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg></div>
+            <h3>AI design review</h3>
+            <p class="muted">An AI reviewer looks at every screenshot for misalignment, inconsistent styling, typos and confusing interfaces.</p>
+          </article>
+          <article class="card card--wide">
+            <div class="card__icon"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></div>
+            <h3>Errors, links and SEO</h3>
+            <p class="muted">JavaScript exceptions, failed requests, broken links and images, mixed content, missing titles and descriptions, heading order and accidental noindex tags. Nothing slips through because nobody thought to click it.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Report -->
+    <section class="section section--alt" id="report">
+      <div class="container split">
+        <div>
+          <span class="eyebrow">Reports</span>
+          <h2>Every issue marked on a screenshot, with the fix next to it.</h2>
+          <p class="muted">Each scan produces a quality score, a fix list ordered by impact and page-by-page screenshots with numbered markers on every problem. Share a private link with your team, export Markdown to your issue tracker or pull JSON into your own dashboards.</p>
+          <ul class="ticks">
+            <li>Prioritised by severity and number of affected pages</li>
+            <li>Element selector and close-up for every finding</li>
+            <li>Shareable links that need no account to open</li>
+          </ul>
+          <a href="/signup" class="btn btn--primary">Run your first scan</a>
+        </div>
+        <figure class="shot">
+          <img src="/images/sample-report.jpg" width="900" height="450" alt="Proofline report overview with quality score, issue counts by severity and a prioritised fix list" loading="lazy">
+        </figure>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section" id="how">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">How it works</span>
+          <h2>From URL to fix list in four steps.</h2>
+        </div>
         <ol class="steps">
-          <li class="step reveal">
-            <span class="step__num mono">01</span>
-            <h3>Connect</h3>
-            <p>Add your site URL. Optionally add login steps so private pages and dashboards are tested too.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step__num mono">02</span>
-            <h3>Scan</h3>
-            <p>Every page is crawled and tested in a real browser at desktop, tablet and mobile sizes.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step__num mono">03</span>
-            <h3>Review</h3>
-            <p>Open the report: issues ranked by severity, each with its location, screenshot and fix.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step__num mono">04</span>
-            <h3>Automate</h3>
-            <p>Run it in CI on every pull request and fail the build when critical issues appear.</p>
-          </li>
+          <li><span class="steps__n mono">01</span><h3>Connect</h3><p class="muted">Add your site. Add login steps so private pages and dashboards are tested too.</p></li>
+          <li><span class="steps__n mono">02</span><h3>Scan</h3><p class="muted">Every page is crawled and tested in a real browser on each device profile.</p></li>
+          <li><span class="steps__n mono">03</span><h3>Review</h3><p class="muted">Open the report. Issues are ranked, located on screenshots and explained.</p></li>
+          <li><span class="steps__n mono">04</span><h3>Automate</h3><p class="muted">Trigger scans from CI and block a release when critical issues appear.</p></li>
         </ol>
       </div>
     </section>
 
-    <!-- Platform: available + planned -->
-    <section class="projects" id="platform">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="eyebrow mono">PLATFORM</span>
-            <h2 class="section-title reveal">One scan, every kind of check</h2>
-          </div>
-          <p class="muted section-head__note">Available now, with more test types on the roadmap.</p>
+    <!-- Developers -->
+    <section class="section section--alt" id="developers">
+      <div class="container split split--reverse">
+        <div class="code-card">
+          <div class="code-card__tabs"><span class="is-active">deploy.yml</span></div>
+<pre><code><span class="c"># Block the release when critical issues are found</span>
+- name: Proofline scan
+  run: |
+    ID=$(curl -s -X POST $PROOFLINE_URL/api/v1/scans \
+      -H "Authorization: Bearer $PROOFLINE_TOKEN" \
+      -H "Content-Type: application/json" \
+      -d '{"url": "https://staging.example.com"}' | jq -r .id)
+    <span class="c"># poll until the scan is done, then</span>
+    test "$(curl -s $PROOFLINE_URL/api/v1/scans/$ID \
+      -H "Authorization: Bearer $PROOFLINE_TOKEN" \
+      | jq .summary.bySeverity.critical)" = "0"</code></pre>
         </div>
+        <div>
+          <span class="eyebrow">Developers</span>
+          <h2>Gate every deploy with one API call.</h2>
+          <p class="muted">Start scans from GitHub Actions, GitLab CI, Jenkins or any script. Results come back as JSON with a score, severity counts and links to the full report.</p>
+          <ul class="ticks">
+            <li>Scoped API tokens, revocable at any time</li>
+            <li>Works with any stack that runs in a browser</li>
+            <li>Same checks and limits as the dashboard</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-        <div class="grid-features">
-          <div class="fcard reveal"><span class="tag tag--mint">AVAILABLE</span><h3>Layout and responsive</h3><p>Sideways scrolling, overlapping buttons, cut-off text, tiny tap targets and stretched images.</p></div>
-          <div class="fcard reveal"><span class="tag tag--mint">AVAILABLE</span><h3>Errors and network</h3><p>JavaScript exceptions, console errors, failed requests, broken links and missing images.</p></div>
-          <div class="fcard reveal"><span class="tag tag--mint">AVAILABLE</span><h3>Visual regression</h3><p>Pixel comparison against approved baselines, with a diff image of exactly what changed.</p></div>
-          <div class="fcard reveal"><span class="tag tag--mint">AVAILABLE</span><h3>AI design review</h3><p>An AI reviewer checks screenshots for misalignment, inconsistent styling, typos and confusing UI.</p></div>
-          <div class="fcard reveal"><span class="tag tag--mint">AVAILABLE</span><h3>SEO basics</h3><p>Titles, descriptions, headings, language, social tags and accidental noindex.</p></div>
-          <div class="fcard reveal"><span class="tag tag--mint">AVAILABLE</span><h3>REST API and CI</h3><p>API tokens, JSON results and exit codes that plug into GitHub Actions, GitLab CI or any pipeline.</p></div>
-          <div class="fcard fcard--planned reveal"><span class="tag tag--lavender">PLANNED</span><h3>API testing</h3><p>REST and GraphQL contract checks for backends written in any language.</p></div>
-          <div class="fcard fcard--planned reveal"><span class="tag tag--lavender">PLANNED</span><h3>Scheduled monitoring</h3><p>Hourly or daily scans of production with alerts when something breaks.</p></div>
-          <div class="fcard fcard--planned reveal"><span class="tag tag--lavender">PLANNED</span><h3>Team workspaces</h3><p>Invite teammates, share projects and get email alerts when a scan finds new issues.</p></div>
+    <!-- Security -->
+    <section class="section" id="security">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">Security</span>
+          <h2>Built for teams that take security seriously.</h2>
+        </div>
+        <div class="grid-3">
+          <div class="card"><h3>Network isolation</h3><p class="muted">Scanners can only reach the public internet. Private networks and cloud metadata endpoints are blocked, even after redirects.</p></div>
+          <div class="card"><h3>Isolated reports</h3><p class="muted">Reports open from unguessable links in a sandbox that cannot access your account session.</p></div>
+          <div class="card"><h3>Protected credentials</h3><p class="muted">Test-account passwords used in login steps are never shown again after you save them.</p></div>
+          <div class="card"><h3>Access control</h3><p class="muted">Role-based access, account suspension and session revocation for administrators.</p></div>
+          <div class="card"><h3>Audit trail</h3><p class="muted">Sign-ins, failed sign-ins, token changes, billing and administrator actions are recorded.</p></div>
+          <div class="card"><h3>Data retention</h3><p class="muted">Reports are deleted automatically when your plan's retention period ends.</p></div>
         </div>
       </div>
     </section>
 
     <!-- FAQ -->
-    <section class="faq" id="faq">
-      <div class="container faq__inner">
+    <section class="section section--alt" id="faq">
+      <div class="container faq">
         <div>
-          <span class="eyebrow mono">FAQ</span>
-          <h2 class="section-title reveal">Common questions</h2>
-          <p class="muted">Something else? <a href="mailto:support@example.com">Contact our team.</a></p>
+          <span class="eyebrow">FAQ</span>
+          <h2>Questions, answered.</h2>
+          <p class="muted">Something else? <a class="link" href="mailto:sales@example.com">Talk to our team</a>.</p>
         </div>
         <div class="accordion">
-          <details class="acc reveal" open>
-            <summary>Does it work with my tech stack?</summary>
-            <p>Yes, if your product runs in a browser. QA Automation tests the rendered app the way a real user sees it, so it does not matter whether the backend is written in JavaScript, Python, PHP, Java, C#, Ruby, Go or anything else.</p>
-          </details>
-          <details class="acc reveal">
-            <summary>Can it test pages behind a login?</summary>
-            <p>Yes. Add login steps once and every scan signs in first. Passwords are read from environment variables, so they never live in your config file.</p>
-          </details>
-          <details class="acc reveal">
-            <summary>Do I need to write code?</summary>
-            <p>No. A scan only needs a URL. User flows are written as simple steps like "click", "fill" and "expect text", with no programming required.</p>
-          </details>
-          <details class="acc reveal">
-            <summary>Can I run it in my CI pipeline?</summary>
-            <p>Yes. It runs from the command line, returns a failing exit code when critical issues are found and saves the report as a build artifact.</p>
-          </details>
+          <details open><summary>Does it work with our stack?</summary><p class="muted">Yes, if your product runs in a browser. Proofline tests the rendered application the way your users see it, so the framework and backend language do not matter.</p></details>
+          <details><summary>Can it test pages behind a login?</summary><p class="muted">Yes. Add login steps once and every scan signs in first. Use a dedicated test account; its password is stored securely and never shown again.</p></details>
+          <details><summary>Do we need to write code?</summary><p class="muted">No. A scan only needs a URL. User flows are written as simple steps such as click, fill and expect text.</p></details>
+          <details><summary>How is this different from a single audit tool?</summary><p class="muted">Proofline crawls every page on four device sizes and combines functional flows, accessibility, layout, performance, links and visual changes in one prioritised report.</p></details>
+          <details><summary>What happens after the trial?</summary><p class="muted">Choose a plan to keep scanning. Your scan history stays in your account.</p></details>
         </div>
       </div>
     </section>
 
     <!-- CTA -->
-    <section class="cta" id="get-started">
+    <section class="cta">
       <div class="cta__glow" aria-hidden="true"></div>
-      <div class="container cta__inner reveal">
-        <h2>Ship every release with confidence</h2>
-        <p>Run your first scan in under a minute. No card required for the trial.</p>
+      <div class="container cta__inner">
+        <h2>Catch the bug before your customers do.</h2>
+        <p class="muted">Start a 14-day free trial. No credit card required.</p>
         <div class="hero__cta">
-          <a href="/signup" class="btn btn--dark">Start your free trial</a>
-          <a href="/pricing" class="btn btn--soft">See pricing</a>
+          <a href="/signup" class="btn btn--primary btn--lg">Start free trial</a>
+          <a href="/pricing" class="btn btn--lg">View pricing</a>
         </div>
       </div>
     </section>
-
   </main>
 
   <footer class="footer">
-    <div class="footer__card">
-      <div class="footer__top">
-        <a href="#top" class="logo" aria-label="Back to top">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="/" class="logo" aria-label="Proofline home">
           <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true">
-            <rect x="2" y="2" width="28" height="28" rx="9"/>
-            <path class="logo__check" d="M9.5 16.5l4.5 4.5 8.5-9.5"/>
+            <defs><linearGradient id="lg-foot" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b7bff"/><stop offset=".55" stop-color="#5b8cff"/><stop offset="1" stop-color="#2dd4bf"/></linearGradient></defs>
+            <rect width="32" height="32" rx="8" fill="url(#lg-foot)"/>
+            <path d="M9 16.5l4.2 4.2L23 10.8" fill="none" stroke="#0b0a14" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <span>QA Automation</span>
+          <span>Proofline</span>
         </a>
-        <div class="footer__cols">
-          <div>
-            <p class="footer__label">Product</p>
-            <a href="#features">Features</a>
-            <a href="#report">Sample report</a>
-            <a href="#how">How it works</a>
-            <a href="#platform">Roadmap</a>
-          </div>
-          <div>
-            <p class="footer__label">Checks</p>
-            <a href="#features">User flows</a>
-            <a href="#features">Accessibility</a>
-            <a href="#features">Performance</a>
-            <a href="#platform">API testing <span class="tag tag--sand">SOON</span></a>
-          </div>
-          <div>
-            <p class="footer__label">Company</p>
-            <a href="/pricing">Pricing</a>
-            <a href="/login">Log in</a>
-            <a href="mailto:sales@example.com">Contact sales</a>
-            <a href="mailto:support@example.com">Support</a>
-          </div>
-        </div>
+        <p class="faint small">Automated QA for modern web teams.</p>
       </div>
-      <div class="footer__bottom">
-        <span class="muted">&copy; <span id="year">2026</span> QA Automation. All rights reserved.</span>
+      <div class="footer__cols">
+        <div><h4>Product</h4><a href="#product">Features</a><a href="#report">Reports</a><a href="#developers">API</a><a href="/pricing">Pricing</a></div>
+        <div><h4>Company</h4><a href="#security">Security</a><a href="mailto:sales@example.com">Contact sales</a><a href="mailto:support@example.com">Support</a></div>
+        <div><h4>Account</h4><a href="/login">Sign in</a><a href="/signup">Start free trial</a></div>
       </div>
     </div>
+    <div class="container footer__bottom faint small">
+      <span>&copy; <span id="year">2026</span> Proofline. All rights reserved.</span>
+    </div>
   </footer>
-
-  <script src="/js/site.js" defer></script>
 </body>
 </html>

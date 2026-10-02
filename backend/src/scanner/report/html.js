@@ -19,22 +19,21 @@ const TEMPLATE = /* html */ `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QA Report - __TITLE__</title>
+<title>Proofline report - __TITLE__</title>
 <style>
 :root{
-  --bg:#f5f6f8;--panel:#fff;--panel2:#f0f2f5;--text:#1b1f24;--muted:#5f6b7a;--border:#dde1e6;--accent:#3b5bdb;
-  --critical:#d7263d;--high:#f46036;--medium:#c99700;--low:#2e86de;--ok:#2b9348;
-  --shadow:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.05);
+  color-scheme:dark;
+  --bg:#08090c;--panel:#12151b;--panel2:#1b1f27;--text:#edeff3;--muted:#a1a9b8;--border:rgba(255,255,255,.08);--accent:#a597ff;
+  --critical:#f8717a;--high:#fb923c;--medium:#fbbf24;--low:#60a5fa;--ok:#34d399;
+  --shadow:0 12px 32px -16px rgba(0,0,0,.6);
 }
-@media (prefers-color-scheme:dark){:root{
-  --bg:#0f1216;--panel:#171b21;--panel2:#1f242c;--text:#e6e9ee;--muted:#98a2b3;--border:#2a313b;--accent:#7b93ff;
-  --critical:#ff5c6c;--high:#ff8a5c;--medium:#f0c419;--low:#5aa9ff;--ok:#52c47a;--shadow:none;
-}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:var(--accent)}
 code{font:12px/1.4 ui-monospace,Consolas,monospace;background:var(--panel2);padding:1px 5px;border-radius:4px;word-break:break-all}
-header{background:var(--panel);border-bottom:1px solid var(--border);padding:18px 24px}
+header{background:linear-gradient(180deg,rgba(139,123,255,.12),transparent),var(--panel);border-bottom:1px solid var(--border);padding:20px 24px}
+header .brand{display:inline-flex;align-items:center;gap:8px;font-weight:650;font-size:13px;letter-spacing:.02em;color:var(--muted);margin-bottom:8px}
+header .brand i{width:16px;height:16px;border-radius:5px;background:linear-gradient(135deg,#8b7bff,#5b8cff 55%,#2dd4bf)}
 header h1{margin:0;font-size:20px}
 header .meta{color:var(--muted);font-size:13px;margin-top:4px}
 nav.tabs{display:flex;gap:4px;padding:0 24px;background:var(--panel);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5;overflow-x:auto}
@@ -49,7 +48,7 @@ main{padding:20px 24px;max-width:1500px;margin:0 auto}
 .score{display:flex;align-items:center;gap:16px}
 .ring{--p:0;width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--panel2) 0);display:grid;place-items:center;flex:none}
 .ring span{width:66px;height:66px;border-radius:50%;background:var(--panel);display:grid;place-items:center;font-size:22px;font-weight:700}
-.sev{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:2px 8px;border-radius:20px;color:#fff;white-space:nowrap}
+.sev{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:2px 8px;border-radius:20px;color:#0b0a14;white-space:nowrap}
 .sev.ok{background:var(--ok)}.sev.critical{background:var(--critical)}.sev.high{background:var(--high)}.sev.medium{background:var(--medium);color:#1b1f24}.sev.low{background:var(--low)}
 .c-critical{color:var(--critical)}.c-high{color:var(--high)}.c-medium{color:var(--medium)}.c-low{color:var(--low)}
 .chip{display:inline-block;font-size:12px;padding:2px 8px;border-radius:6px;background:var(--panel2);color:var(--muted);margin:2px 4px 2px 0}
@@ -113,6 +112,7 @@ main{padding:20px 24px;max-width:1500px;margin:0 auto}
 </head>
 <body>
 <header>
+  <div class="brand"><i></i>Proofline</div>
   <h1 id="h-title"></h1>
   <div class="meta" id="h-meta"></div>
 </header>
@@ -140,7 +140,7 @@ const $ = (id) => document.getElementById(id);
 const S = RUN.summary;
 
 // ---------- header
-$('h-title').textContent = 'QA Report - ' + RUN.url;
+$('h-title').textContent = 'Proofline report - ' + RUN.url;
 $('h-meta').textContent = new Date(RUN.startedAt).toLocaleString() + ' | ' + S.pagesTested + ' pages x ' + RUN.viewports.length + ' devices (' + RUN.viewports.map(v => v.name + ' ' + v.width + 'px').join(', ') + ') | ' + RUN.durationSec + 's'
   + (RUN.ai.enabled ? ' | AI review: ' + (RUN.ai.disabledReason ? 'unavailable' : RUN.ai.model) : '');
 if (!RUN.flows.length) $('tab-flows').classList.add('hidden');

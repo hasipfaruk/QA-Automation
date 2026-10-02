@@ -1,0 +1,50 @@
+/* ==========================================================================
+   Proofline sign in, sign up and error pages
+   ========================================================================== */
+
+.auth { min-height: 100vh; display: grid; grid-template-columns: minmax(380px, 0.9fr) 1.1fr; }
+
+.auth__aside { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 40px 48px; border-right: 1px solid var(--border); background: var(--bg-elevated); }
+.auth__aside-glow { position: absolute; inset: 0; background: radial-gradient(60% 45% at 30% 35%, rgba(139, 123, 255, 0.22), transparent 70%), radial-gradient(40% 35% at 80% 80%, rgba(45, 212, 191, 0.12), transparent 70%); pointer-events: none; }
+.auth__aside > :not(.auth__aside-glow) { position: relative; }
+.auth__pitch h2 { font-size: 32px; letter-spacing: -0.03em; max-width: 380px; margin-bottom: 32px; }
+.auth__pitch ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; }
+.auth__pitch li { display: grid; gap: 4px; padding-left: 34px; position: relative; }
+.auth__pitch li::before { content: ""; position: absolute; left: 0; top: 0; width: 22px; height: 22px; border-radius: 7px; background: var(--accent-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.2l2.2 2.2 4.8-4.8' fill='none' stroke='%23a597ff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px no-repeat; border: 1px solid rgba(139, 123, 255, 0.3); }
+.auth__pitch b { font-weight: 600; }
+.auth__pitch span { color: var(--text-muted); font-size: 14px; }
+
+.auth__main { display: grid; place-items: center; padding: 40px 24px; }
+.auth__mobile-logo { display: none; }
+.auth__panel { width: 100%; max-width: 400px; }
+.auth__panel h1 { font-size: 28px; letter-spacing: -0.03em; }
+.auth__sub { margin: 8px 0 28px; color: var(--text-muted); }
+.auth__form { display: grid; gap: 16px; }
+.auth__form .btn { margin-top: 6px; }
+.auth__switch { margin-top: 24px; text-align: center; font-size: 14px; color: var(--text-muted); }
+.auth__switch a { color: var(--accent-strong); font-weight: 500; }
+.auth__legal { font-size: 12px; color: var(--text-faint); text-align: center; }
+.password-field { position: relative; }
+.password-field .input { padding-right: 64px; }
+.password-field button { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); height: 28px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: var(--text-muted); font: 500 12px/1 var(--font); cursor: pointer; }
+.password-field button:hover { background: var(--surface-2); color: var(--text); }
+.strength { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 2px; }
+.strength i { height: 3px; border-radius: 2px; background: var(--surface-3); transition: background-color 0.2s; }
+.strength[data-level="1"] i:nth-child(-n + 1) { background: var(--danger); }
+.strength[data-level="2"] i:nth-child(-n + 2) { background: var(--warning); }
+.strength[data-level="3"] i:nth-child(-n + 3) { background: var(--info); }
+.strength[data-level="4"] i { background: var(--success); }
+
+/* Error page */
+.error-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; text-align: center; position: relative; overflow: hidden; }
+.error-page::before { content: ""; position: absolute; inset: 0; background: radial-gradient(40% 40% at 50% 40%, rgba(139, 123, 255, 0.18), transparent 70%); pointer-events: none; }
+.error-page__inner { position: relative; display: grid; gap: 16px; justify-items: center; max-width: 460px; }
+.error-page__code { font: 600 96px/1 var(--font); letter-spacing: -0.05em; }
+.error-page__actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .auth { grid-template-columns: 1fr; }
+  .auth__aside { display: none; }
+  .auth__mobile-logo { display: inline-flex; position: absolute; top: 24px; left: 24px; }
+  .auth__main { position: relative; padding-top: 96px; align-items: start; }
+}

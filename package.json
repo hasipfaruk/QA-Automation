@@ -2,7 +2,7 @@
   "name": "qa-automation",
   "version": "1.0.0",
   "private": true,
-  "description": "QA Automation: enterprise QA platform for websites and web applications.",
+  "description": "Proofline: enterprise QA platform for websites and web applications.",
   "license": "UNLICENSED",
   "workspaces": [
     "backend"

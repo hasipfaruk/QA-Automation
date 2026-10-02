@@ -10,7 +10,7 @@
         { "goto": "/contact.html" },
         { "fill": "#name", "value": "Test User" },
         { "fill": "#email", "value": "test@example.com" },
-        { "fill": "#msg", "value": "Hello from the QA bot" },
+        { "fill": "#msg", "value": "Hello from Proofline" },
         { "click": "#send" },
         { "expectText": "Thank you", "timeout": 4000 }
       ]

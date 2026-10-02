@@ -4,7 +4,7 @@ import { loadConfig } from '../src/scanner/config.js';
 import { runQA } from '../src/scanner/runner.js';
 
 const HELP = `
-QA Automation - tests a website/web app and tells you what to fix.
+Proofline scanner - tests a website or web application and reports what to fix.
 
 Usage:
   node backend/cli/qa.js <url> [options]

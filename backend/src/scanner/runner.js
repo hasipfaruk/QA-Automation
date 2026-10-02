@@ -51,7 +51,7 @@ export async function runQA(cfg) {
   fs.mkdirSync(shotDir, { recursive: true });
 
   log = cfg.quiet ? () => {} : (...a) => console.log(...a);
-  log(`\n${bold('QA Automation')}  ${cfg.url}`);
+  log(`\n${bold('Proofline')}  ${cfg.url}`);
   log(`   devices: ${cfg.viewports.join(', ')} | max pages: ${cfg.only ? cfg.only.length : cfg.maxPages} | AI review: ${cfg.ai.enabled ? 'on' : 'off'} | visual regression: ${cfg.visual.enabled ? 'on' : 'off'}`);
   log(`   output: ${outDir}\n`);
 
@@ -85,7 +85,7 @@ export async function runQA(cfg) {
 
     const finished = new Date();
     const run = {
-      tool: 'QA Automation',
+      tool: 'Proofline',
       url: cfg.url,
       startedAt: started.toISOString(),
       finishedAt: finished.toISOString(),

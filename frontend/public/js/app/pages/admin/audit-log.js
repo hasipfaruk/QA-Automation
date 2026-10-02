@@ -1,50 +1,70 @@
 import { get } from '../../core/api.js';
 import { html, mount, $, formData } from '../../core/html.js';
+import { icon } from '../../core/icons.js';
 import { renderShell } from '../../core/layout.js';
-import { num, dateTime, pager, bindPager } from '../../core/format.js';
+import { dateTime, pager, bindPager } from '../../core/format.js';
 
 const ACTIONS = [
-  ['', 'All actions'],
-  ['user.', 'User activity'],
-  ['user.login_failed', 'Failed logins'],
-  ['admin.', 'Admin actions'],
+  ['', 'All events'],
+  ['user.', 'Account activity'],
+  ['user.login_failed', 'Failed sign-ins'],
+  ['user.login_blocked', 'Blocked sign-ins'],
+  ['admin.', 'Administrator actions'],
   ['billing.', 'Billing'],
   ['token.', 'API tokens'],
 ];
 
-const tone = (action) => (/failed|blocked|deleted|suspend/.test(action) ? 'danger' : action.startsWith('admin.') ? 'dark' : 'neutral');
+const LABELS = {
+  'user.signup': 'Account created',
+  'user.login': 'Signed in',
+  'user.logout': 'Signed out',
+  'user.login_failed': 'Failed sign-in',
+  'user.login_blocked': 'Blocked sign-in',
+  'user.password_changed': 'Password changed',
+  'user.deleted_self': 'Account deleted by owner',
+  'token.created': 'API token created',
+  'token.revoked': 'API token revoked',
+  'billing.plan_changed': 'Plan changed by billing',
+  'billing.dev_plan_switch': 'Plan switched (development)',
+  'admin.user_updated': 'Account updated by admin',
+  'admin.user_signed_out': 'Sessions ended by admin',
+  'admin.user_deleted': 'Account deleted by admin',
+  'admin.scan_deleted': 'Scan deleted by admin',
+};
+
+const tone = (action) => (/failed|blocked|deleted/.test(action) ? 'danger' : action.startsWith('admin.') ? 'accent' : action.startsWith('billing.') ? 'info' : '');
 
 function describe(details) {
   if (!details) return '';
-  if (details.changes) return Object.entries(details.changes).map(([k, v]) => `${k}: ${v.from} -> ${v.to}`).join(', ');
+  if (details.changes) return Object.entries(details.changes).map(([k, v]) => `${k}: ${v.from} to ${v.to}`).join(', ');
   return Object.entries(details).map(([k, v]) => `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`).join(', ');
 }
 
 export async function render({ session, main }) {
-  renderShell({ session, active: 'admin-audit', title: 'Audit log' });
+  renderShell({ session, active: 'admin-audit', title: 'Audit log', description: 'Security and administrative events. Entries cannot be edited or deleted.' });
   const filters = { action: '', q: '' };
 
   async function load(page = 1) {
     const qs = new URLSearchParams({ ...Object.fromEntries(Object.entries(filters).filter(([, v]) => v)), page, limit: 50 });
     const res = await get(`/admin/audit?${qs}`);
     mount(main, html`
-      <div class="page-head"><div><h1>Audit log</h1><p class="muted">${num(res.total)} recorded event${res.total === 1 ? '' : 's'}. Entries cannot be edited or deleted.</p></div></div>
-      <form id="filters" class="filters card">
-        <select name="action" aria-label="Action">${ACTIONS.map(([v, l]) => html`<option value="${v}" ${v === filters.action ? 'selected' : ''}>${l}</option>`)}</select>
-        <input name="q" type="search" placeholder="Actor email or target id" value="${filters.q}" aria-label="Search">
-        <button class="btn btn--dark" type="submit">Filter</button>
+      <form id="filters" class="filters" role="search">
+        <select class="select" name="action" aria-label="Event type">${ACTIONS.map(([v, l]) => html`<option value="${v}" ${v === filters.action ? 'selected' : ''}>${l}</option>`)}</select>
+        <input class="input" name="q" type="search" placeholder="Search by actor email or target id" value="${filters.q}" aria-label="Search events">
+        <button class="btn btn--primary" type="submit">${icon('search')} Apply</button>
       </form>
       ${res.data.length ? html`<div class="table-wrap"><table class="table">
-        <thead><tr><th>Time</th><th>Action</th><th>Actor</th><th>Target</th><th>Details</th><th>IP</th></tr></thead>
+        <thead><tr><th>Event</th><th>Actor</th><th>Target</th><th>Details</th><th>IP address</th><th>Time</th></tr></thead>
         <tbody>${res.data.map((e) => html`<tr>
-          <td class="nowrap muted small">${dateTime(e.createdAt)}</td>
-          <td><span class="badge badge--${tone(e.action)}">${e.action}</span></td>
-          <td class="small">${e.actorEmail || 'system'}</td>
-          <td class="small">${e.targetType ? html`${e.targetType === 'user' && e.targetId ? html`<a class="link" href="/app/admin/users/${e.targetId}">user ${e.targetId}</a>` : `${e.targetType} ${e.targetId || ''}`}` : '-'}</td>
+          <td><span class="badge ${tone(e.action) ? `badge--${tone(e.action)}` : ''}">${LABELS[e.action] || e.action}</span></td>
+          <td class="small">${e.actorEmail || 'System'}</td>
+          <td class="small">${e.targetType === 'user' && e.targetId ? html`<a class="link" href="/app/admin/users/${e.targetId}">Account ${e.targetId}</a>` : e.targetType ? `${e.targetType} ${e.targetId || ''}` : '-'}</td>
           <td class="small muted">${describe(e.details)}</td>
-          <td class="small muted nowrap">${e.ip || '-'}</td>
-        </tr>`)}</tbody></table></div>` : html`<div class="empty-state"><p>No events match these filters.</p></div>`}
-      ${pager(res.page, res.pages)}`);
+          <td class="small muted mono nowrap">${e.ip || '-'}</td>
+          <td class="small muted nowrap">${dateTime(e.createdAt)}</td>
+        </tr>`)}</tbody></table></div>`
+        : html`<div class="empty"><div class="empty__icon">${icon('shield')}</div><h3>No matching events</h3><p class="muted">Try a different event type or search.</p></div>`}
+      ${pager(res.page, res.pages, res.total, 'events')}`);
 
     $('#filters').addEventListener('submit', (e) => {
       e.preventDefault();

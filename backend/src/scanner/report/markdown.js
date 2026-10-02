@@ -9,7 +9,7 @@ const pathOf = (u) => { try { const x = new URL(u); return (x.pathname + x.searc
 export function writeMarkdownReport(run, outDir) {
   const s = run.summary;
   const L = [];
-  L.push(`# QA Report - ${run.url}`);
+  L.push(`# Proofline report - ${run.url}`);
   L.push('');
   L.push(`**Score:** ${s.score}/100 (${s.grade})  `);
   L.push(`**Tested:** ${s.pagesTested} pages x ${run.viewports.map((v) => v.name).join(', ')} - ${new Date(run.startedAt).toLocaleString()}  `);

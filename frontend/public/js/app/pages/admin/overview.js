@@ -1,55 +1,64 @@
 import { get } from '../../core/api.js';
 import { html, mount } from '../../core/html.js';
+import { icon } from '../../core/icons.js';
 import { renderShell } from '../../core/layout.js';
 import { num, money, timeAgo, hostOf, planBadge } from '../../core/format.js';
 
 const PLAN_ORDER = ['trial', 'pro', 'business', 'enterprise'];
 
-function kpi(label, value, hint, tone = '') {
-  return html`<div class="card kpi ${tone}"><span class="eyebrow">${label}</span><b>${value}</b>${hint ? html`<span class="muted small">${hint}</span>` : ''}</div>`;
+function kpi(label, iconName, value, hint, tone = '') {
+  return html`<div class="kpi ${tone ? `kpi--${tone}` : ''}"><span class="kpi__label">${icon(iconName)}${label}</span><span class="kpi__value">${value}</span><span class="kpi__hint">${hint}</span></div>`;
 }
 
 function dailyChart(series) {
   const max = Math.max(1, ...series.map((d) => d.scans));
-  return html`<div class="chart" role="img" aria-label="Scans per day for the last 14 days">
+  return html`<div class="chart" role="img" aria-label="Scans per day over the last 14 days">
     ${series.map((d) => html`<div class="chart__col" title="${d.day}: ${d.scans} scans">
       <span class="chart__val">${d.scans || ''}</span>
-      <i style="height:${Math.round((d.scans / max) * 100)}%"></i>
-      <span class="chart__label">${d.day.slice(5)}</span>
+      <i class="chart__bar" style="height:${Math.round((d.scans / max) * 100)}%"></i>
+      <span class="chart__label">${d.day.slice(8)}</span>
     </div>`)}
   </div>`;
 }
 
-function planBars(byPlan, total) {
-  return html`<div class="bars">${PLAN_ORDER.map((p) => {
-    const n = byPlan[p] || 0;
-    return html`<div class="bars__row"><span>${planBadge(p)}</span><div class="bar"><i style="width:${total ? Math.round((n / total) * 100) : 0}%"></i></div><b>${n}</b></div>`;
-  })}</div>`;
-}
-
 export async function render({ session, main }) {
-  renderShell({ session, active: 'admin-overview', title: 'Admin overview' });
+  renderShell({ session, active: 'admin-overview', title: 'Platform overview', description: 'Customers, revenue and scanning activity across Proofline.' });
   const s = await get('/admin/stats');
+  const paidShare = s.users.total ? Math.round((s.revenue.payingCustomers / s.users.total) * 100) : 0;
 
   mount(main, html`
-    <div class="page-head"><div><h1>Platform overview</h1><p class="muted">Live numbers across all customers.</p></div></div>
-    <div class="kpis">
-      ${kpi('Customers', num(s.users.total), `${num(s.users.new7d)} new in the last 7 days`)}
-      ${kpi('Estimated MRR', money(s.revenue.estimatedMrr), `${num(s.revenue.payingCustomers)} paying accounts`)}
-      ${kpi('Scans today', num(s.scans.today), `${num(s.scans.last30d)} in the last 30 days`)}
-      ${kpi('Queue', `${num(s.scans.running)} / ${num(s.scans.queued)}`, 'running / waiting')}
-      ${kpi('Failed (24h)', num(s.scans.failed24h), 'scans that could not finish', s.scans.failed24h ? 'kpi--warn' : '')}
-      ${kpi('Average score', s.scans.averageScore30d ?? '-', 'last 30 days')}
+    <div class="kpis kpis--3">
+      ${kpi('Customers', 'users', num(s.users.total), `${num(s.users.new7d)} joined in the last 7 days`)}
+      ${kpi('Estimated MRR', 'card', money(s.revenue.estimatedMrr), `${num(s.revenue.payingCustomers)} paying accounts (${paidShare}%)`)}
+      ${kpi('Scans today', 'activity', num(s.scans.today), `${num(s.scans.last30d)} in the last 30 days`)}
+      ${kpi('Scan queue', 'refresh', `${num(s.scans.running)} running`, `${num(s.scans.queued)} waiting`)}
+      ${kpi('Failed scans', 'alert', num(s.scans.failed24h), 'In the last 24 hours', s.scans.failed24h ? 'danger' : 'success')}
+      ${kpi('Average score', 'overview', s.scans.averageScore30d ?? '-', 'Completed scans, last 30 days')}
     </div>
+
     <div class="grid-2">
-      <div class="card"><h2 class="card-title">Scans per day</h2>${dailyChart(s.scans.daily)}</div>
-      <div class="card"><h2 class="card-title">Customers by plan</h2>${planBars(s.users.byPlan, s.users.total)}
-        <p class="muted small" style="margin-top:12px">${num(s.users.byStatus.suspended || 0)} suspended account(s)</p></div>
+      <section class="panel"><div class="panel__head"><h2>Scans per day</h2><span class="faint small">Last 14 days</span></div><div class="panel__body">${dailyChart(s.scans.daily)}</div></section>
+      <section class="panel"><div class="panel__head"><h2>Customers by plan</h2><a class="link small" href="/app/admin/users">Manage</a></div>
+        <div class="panel__body"><div class="bars">${PLAN_ORDER.map((p) => {
+          const n = s.users.byPlan[p] || 0;
+          return html`<div class="bars__row">${planBadge(p)}<div class="meter"><i style="width:${s.users.total ? Math.round((n / s.users.total) * 100) : 0}%"></i></div><b>${n}</b></div>`;
+        })}</div>
+        <p class="faint small" style="margin-top:18px">${num(s.users.byStatus.suspended || 0)} suspended account(s)</p></div>
+      </section>
     </div>
-    <div class="grid-2">
-      <div class="card"><div class="card-title-row"><h2 class="card-title">Newest customers</h2><a class="link small" href="/app/admin/users">All users</a></div>
-        <ul class="list">${s.recentUsers.map((u) => html`<li><a class="link" href="/app/admin/users/${u.id}">${u.email}</a> ${planBadge(u.plan)}<span class="muted small">${timeAgo(u.createdAt)}</span></li>`)}</ul></div>
-      <div class="card"><div class="card-title-row"><h2 class="card-title">Recent failed scans</h2><a class="link small" href="/app/admin/scans?status=failed">All failures</a></div>
-        ${s.recentFailures.length ? html`<ul class="list">${s.recentFailures.map((f) => html`<li><div><b>${hostOf(f.url)}</b> <span class="muted small">${f.userEmail}</span><p class="muted small">${f.error || 'Unknown error'}</p></div><span class="muted small">${timeAgo(f.finishedAt)}</span></li>`)}</ul>` : html`<p class="muted">No failed scans.</p>`}</div>
+
+    <div class="grid-2" style="margin-top:20px">
+      <section class="panel"><div class="panel__head"><h2>Newest customers</h2><a class="link small" href="/app/admin/users">View all</a></div>
+        <ul class="list">${s.recentUsers.map((u) => html`<li>
+          <a class="list__main" href="/app/admin/users/${u.id}"><b>${u.name || u.email}</b><span>${u.email}</span></a>
+          <span class="row">${planBadge(u.plan)}<span class="faint small nowrap">${timeAgo(u.createdAt)}</span></span>
+        </li>`)}</ul>
+      </section>
+      <section class="panel"><div class="panel__head"><h2>Recent failed scans</h2><a class="link small" href="/app/admin/scans?status=failed">View all</a></div>
+        ${s.recentFailures.length ? html`<ul class="list">${s.recentFailures.map((f) => html`<li>
+          <span class="list__main"><b>${hostOf(f.url)}</b><span>${f.userEmail} | ${f.error || 'Unknown error'}</span></span>
+          <span class="faint small nowrap">${timeAgo(f.finishedAt)}</span>
+        </li>`)}</ul>` : html`<div class="panel__body"><p class="muted">No failed scans. Everything is running normally.</p></div>`}
+      </section>
     </div>`);
 }

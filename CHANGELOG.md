@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-10-02
+
+### Changed
+
+- New product name: Proofline.
+- Redesigned every page in a dark visual style: marketing website, pricing, sign in, sign up, customer workspace, admin console, error page and scan reports.
+- The application now uses a sidebar layout with a top bar for page titles and actions.
+- Administrators sign in to a dedicated admin console and no longer see customer scanning, usage or billing screens.
+- New scans are created on a dedicated page with grouped settings; the overview offers a quick scan.
+- Rewritten product copy across the website and application.
+
 ## [1.0.0] - 2026-10-02
 
 ### Added

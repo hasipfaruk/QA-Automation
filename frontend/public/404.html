@@ -3,17 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Page not found | QA Automation</title>
+  <title>Page not found | Proofline</title>
+  <meta name="theme-color" content="#08090c">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/app.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/auth.css">
 </head>
-<body class="auth">
-  <div class="auth__glow" aria-hidden="true"></div>
-  <main class="auth__card error-card">
-    <span class="eyebrow">Error</span>
-    <h1>We could not find that page</h1>
-    <p class="muted">The link may be broken, or the page may have been removed or expired.</p>
-    <a class="btn btn--dark" href="/">Go to the home page</a>
+<body>
+  <main class="error-page">
+    <div class="error-page__inner">
+      <span class="error-page__code gradient-text">404</span>
+      <h1>This page could not be found</h1>
+      <p class="muted">The link may be broken, or the page may have been moved, removed or expired.</p>
+      <div class="error-page__actions">
+        <a class="btn btn--primary" href="/app">Go to dashboard</a>
+        <a class="btn" href="/">Back to home</a>
+      </div>
+    </div>
   </main>
 </body>
 </html>

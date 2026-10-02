@@ -1,4 +1,4 @@
-// Starts a tiny local website full of deliberate bugs and runs the QA bot against it.
+// Starts a tiny local website full of deliberate bugs and runs the scanner against it.
 //   npm run demo   (add -- --open to open the report)
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

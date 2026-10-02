@@ -1,10 +1,16 @@
 import { html } from '../core/html.js';
+import { icon } from '../core/icons.js';
 
-export const VIEWPORT_LABELS = { desktop: 'Desktop 1440px', laptop: 'Laptop 1280px', tablet: 'Tablet 768px', mobile: 'Mobile 390px' };
+export const DEVICES = [
+  { id: 'desktop', label: 'Desktop', detail: '1440 x 900' },
+  { id: 'laptop', label: 'Laptop', detail: '1280 x 720' },
+  { id: 'tablet', label: 'Tablet', detail: '768 x 1024, touch' },
+  { id: 'mobile', label: 'Mobile', detail: '390 x 844, touch' },
+];
 
 export const FLOW_EXAMPLE = `[
   {
-    "name": "Search works",
+    "name": "Search returns results",
     "steps": [
       { "goto": "/" },
       { "fill": "input[type=search]", "value": "shoes" },
@@ -24,61 +30,66 @@ export const LOGIN_EXAMPLE = `{
   ]
 }`;
 
-const lockTag = (label = 'Pro') => html`<span class="tag tag--lavender">${label}</span>`;
+const locked = html`<span class="lock">${icon('lock', 'icon icon--xs')} Pro</span>`;
 
-/** New scan form. Options the plan does not include are shown but disabled. */
-export function scanForm({ plan, aiAvailable }) {
-  const limits = plan.limits;
+function section(title, text, fields) {
+  return html`<div class="form-section">
+    <div class="form-section__intro"><h3>${title}</h3><p>${text}</p></div>
+    <div class="form-section__fields">${fields}</div>
+  </div>`;
+}
+
+/** Full new-scan form. Options outside the customer's plan are visible but locked. */
+export function scanForm({ limits, aiAvailable }) {
   return html`
-    <form class="card scan-form" id="scan-form" novalidate>
-      <label for="url" class="scan-form__label">Website URL</label>
-      <div class="scan-form__row">
-        <input id="url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="https://your-site.com" required>
-        <button class="btn btn--dark" type="submit">Start scan</button>
-      </div>
-      <p id="scan-error" class="form-error" role="alert" hidden></p>
+    <form id="scan-form" class="panel" novalidate>
+      <div class="panel__body">
+        <div id="scan-error" class="form-error" role="alert" hidden></div>
 
-      <details class="options">
-        <summary>Scan options</summary>
-        <div class="options__grid">
-          <fieldset>
-            <legend>Devices</legend>
-            ${Object.entries(VIEWPORT_LABELS).map(([id, label]) => {
-              const allowed = limits.viewports.includes(id);
-              const checked = allowed && (id === 'desktop' || id === 'mobile');
-              return html`<label class="check ${allowed ? '' : 'is-locked'}">
-                <input type="checkbox" name="viewports" value="${id}" ${checked ? 'checked' : ''} ${allowed ? '' : 'disabled'}> ${label} ${allowed ? '' : lockTag()}
+        ${section('Website', 'The page to start from. Proofline follows links on the same domain.', html`
+          <label class="field"><span class="field__label">URL</span>
+            <input class="input" id="url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="https://www.example.com" required></label>`)}
+
+        ${section('Devices', 'Every page is tested on each selected device profile.', html`
+          <div class="option-grid">
+            ${DEVICES.map((d) => {
+              const allowed = limits.viewports.includes(d.id);
+              const checked = allowed && (d.id === 'desktop' || d.id === 'mobile');
+              return html`<label class="option ${allowed ? '' : 'is-locked'}">
+                <input type="checkbox" name="viewports" value="${d.id}" ${checked ? 'checked' : ''} ${allowed ? '' : 'disabled'}>
+                <span class="option__text"><b>${d.label}</b><span>${d.detail}</span></span>${allowed ? '' : locked}
               </label>`;
             })}
-          </fieldset>
-          <fieldset>
-            <legend>Crawl</legend>
-            <label class="field"><span>Max pages <span class="muted">(limit ${limits.maxPages})</span></span>
-              <input type="number" name="maxPages" min="1" max="${limits.maxPages}" value="${Math.min(10, limits.maxPages)}"></label>
-            <label class="check"><input type="checkbox" name="checkExternalLinks" value="true" checked> Check external links</label>
-          </fieldset>
-          <fieldset>
-            <legend>Extras</legend>
-            <label class="check ${limits.ai && aiAvailable ? '' : 'is-locked'}">
-              <input type="checkbox" name="ai" value="true" ${limits.ai && aiAvailable ? '' : 'disabled'}>
-              AI design review ${limits.ai ? (aiAvailable ? '' : html`<span class="muted small">(not configured)</span>`) : lockTag()}
-            </label>
-            <label class="field"><span>Visual regression ${limits.visual ? '' : lockTag()}</span>
-              <select name="visual" ${limits.visual ? '' : 'disabled'}>
-                <option value="off">Off</option>
-                <option value="compare">Compare with baseline</option>
-                <option value="update">Save as new baseline</option>
-              </select>
-            </label>
-          </fieldset>
-        </div>
-        <div class="options__advanced">
-          <label class="field"><span>User flows (JSON) ${limits.flows ? '' : lockTag()}</span>
-            <textarea name="flows" rows="7" spellcheck="false" placeholder="${FLOW_EXAMPLE}" ${limits.flows ? '' : 'disabled'}></textarea></label>
-          <label class="field"><span>Login steps (JSON) ${limits.flows ? '' : lockTag()} <span class="muted small">Use a dedicated test account.</span></span>
-            <textarea name="login" rows="7" spellcheck="false" placeholder="${LOGIN_EXAMPLE}" ${limits.flows ? '' : 'disabled'}></textarea></label>
-          <p class="muted small">Step actions: goto, click, fill, type, select, check, uncheck, hover, press, wait, expectText, expectNoText, expectVisible, expectUrl.</p>
-        </div>
-      </details>
+          </div>`)}
+
+        ${section('Crawl', 'Limit how much of the site is tested in this scan.', html`
+          <label class="field"><span class="field__label">Maximum pages</span>
+            <input class="input" type="number" name="maxPages" min="1" max="${limits.maxPages}" value="${Math.min(10, limits.maxPages)}">
+            <span class="field__hint">Your plan allows up to ${limits.maxPages} pages per scan.</span></label>
+          <label class="check"><input type="checkbox" name="checkExternalLinks" value="true" checked> Check links to other websites</label>`)}
+
+        ${section('Advanced checks', 'Extra analysis included with paid plans.', html`
+          <label class="option ${limits.ai && aiAvailable ? '' : 'is-locked'}">
+            <input type="checkbox" name="ai" value="true" ${limits.ai && aiAvailable ? '' : 'disabled'}>
+            <span class="option__text"><b>AI design review</b><span>${limits.ai && !aiAvailable ? 'Currently unavailable' : 'Reviews screenshots for visual and usability problems'}</span></span>${limits.ai ? '' : locked}
+          </label>
+          <label class="field"><span class="field__label">Visual regression ${limits.visual ? '' : locked}</span>
+            <select class="select" name="visual" ${limits.visual ? '' : 'disabled'}>
+              <option value="off">Off</option>
+              <option value="compare">Compare with the saved baseline</option>
+              <option value="update">Save this scan as the new baseline</option>
+            </select></label>`)}
+
+        ${section('User flows', 'Scripted journeys run in a real browser, with a screenshot at every step.', html`
+          <label class="field"><span class="field__label">Flows (JSON) ${limits.flows ? '' : locked}</span>
+            <textarea class="textarea" name="flows" rows="8" spellcheck="false" placeholder="${FLOW_EXAMPLE}" ${limits.flows ? '' : 'disabled'}></textarea></label>
+          <label class="field"><span class="field__label">Login steps (JSON) ${limits.flows ? '' : locked}</span>
+            <textarea class="textarea" name="login" rows="8" spellcheck="false" placeholder="${LOGIN_EXAMPLE}" ${limits.flows ? '' : 'disabled'}></textarea>
+            <span class="field__hint">Use a dedicated test account. Typed values are stored securely and never shown again.</span></label>`)}
+      </div>
+      <div class="panel__foot">
+        <a href="/app/scans" class="btn">Cancel</a>
+        <button class="btn btn--primary" type="submit">${icon('check')} Start scan</button>
+      </div>
     </form>`;
 }

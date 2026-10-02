@@ -5,18 +5,14 @@ import { pager, bindPager } from '../core/format.js';
 import { scanTable } from '../components/scan-table.js';
 
 export async function render({ session, main }) {
-  renderShell({ session, active: 'scans', title: 'Scans' });
+  renderShell({ session, active: 'scans', title: 'Scans', description: 'Every scan in your workspace, newest first.' });
   flashFromQuery({ deleted: { type: 'success', text: 'Scan deleted.' } });
 
   async function load(page) {
-    const res = await get(`/scans?page=${page}&limit=25`);
+    const res = await get(`/scans?page=${page}&limit=20`);
     mount(main, html`
-      <div class="page-head">
-        <div><h1>Scan history</h1><p class="muted">${res.total} scan${res.total === 1 ? '' : 's'}, newest first.</p></div>
-        <a href="/app" class="btn btn--dark">New scan</a>
-      </div>
-      ${scanTable(res.data, { emptyText: 'No scans yet.' })}
-      ${pager(res.page, res.pages)}`);
+      ${scanTable(res.data, { empty: { title: 'No scans yet', text: 'Your scan history will appear here.', action: { href: '/app/scans/new', label: 'Create a scan' } } })}
+      ${pager(res.page, res.pages, res.total, 'scans')}`);
     bindPager(main, load);
   }
   await load(1);

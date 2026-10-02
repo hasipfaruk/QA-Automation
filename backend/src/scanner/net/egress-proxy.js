@@ -79,7 +79,7 @@ export async function startEgressProxy({ allow } = {}) {
   const deny = (res, reason) => {
     blockedRequests++;
     res.writeHead(403, { 'content-type': 'text/plain' });
-    res.end(`Blocked by QA Automation network policy: ${reason}`);
+    res.end(`Blocked by Proofline network policy: ${reason}`);
   };
 
   // Plain HTTP: the browser sends the absolute URL in the request line

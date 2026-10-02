@@ -24,7 +24,7 @@ Never enable demo accounts on a public server.
 
 ## Admin panel
 
-Administrators see **Admin** in the top navigation (`/app/admin`).
+Administrators sign in to the admin console at `/app/admin`. The console is separate from the customer workspace: administrators do not run scans or see usage and billing screens.
 
 | Section | Capabilities |
 |---|---|

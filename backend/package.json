@@ -2,7 +2,7 @@
   "name": "@qa-automation/backend",
   "version": "1.0.0",
   "private": true,
-  "description": "QA Automation API server, scan worker, scanning engine and CLI.",
+  "description": "Proofline API server, scan worker, scanning engine and CLI.",
   "type": "module",
   "bin": {
     "qa": "./bin/qa.js"

@@ -1,8 +1,8 @@
-# QA Automation
+# Proofline
 
 Enterprise quality assurance platform for websites and web applications.
 
-QA Automation crawls a site, tests every page on desktop, tablet and mobile in a real browser, and delivers a prioritised fix list with annotated screenshots. Teams use it through a hosted dashboard, a REST API for CI pipelines, or a command-line scanner.
+Proofline crawls a site, tests every page on desktop, tablet and mobile in a real browser, and delivers a prioritised fix list with annotated screenshots. Teams use it through a hosted dashboard, a REST API for CI pipelines, or a command-line scanner.
 
 ![Sample report](frontend/public/images/sample-report.jpg)
 
@@ -34,7 +34,7 @@ npm run setup     # downloads the browser engine used for scanning
 npm start
 ```
 
-Open http://localhost:3000. In development three demo accounts are created automatically:
+Open http://localhost:3000. In development three demo accounts are created automatically. Administrators sign in to the admin console; customers sign in to their workspace.
 
 | Role | Email | Password |
 |---|---|---|
@@ -98,4 +98,4 @@ docs/                     architecture, API, administration, configuration, depl
 
 ## License
 
-Proprietary. Copyright (c) 2026 QA Automation. All rights reserved.
+Proprietary. Copyright (c) 2026 Proofline. All rights reserved.
