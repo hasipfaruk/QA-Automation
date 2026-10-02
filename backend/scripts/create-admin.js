@@ -2,10 +2,11 @@
 //   npm run create-admin -- --email you@company.com [--password "..."] [--name "Jane Doe"]
 // When --password is omitted a strong random password is generated and printed once.
 import { parseArgs } from 'node:util';
-import { loadDotEnv, readConfig } from '../src/config.js';
-import { openDatabase } from '../src/db.js';
-import { upsertAdmin } from '../src/seed.js';
-import { randomToken, validateEmail, validatePassword } from '../src/security.js';
+import { loadDotEnv, readConfig } from '../src/config/env.js';
+import { openDatabase } from '../src/db/index.js';
+import { upsertAdmin } from '../src/services/seed.service.js';
+import { randomToken } from '../src/lib/crypto.js';
+import { validateEmail, validatePassword } from '../src/lib/validation.js';
 
 const { values } = parseArgs({ options: { email: { type: 'string' }, password: { type: 'string' }, name: { type: 'string' } } });
 

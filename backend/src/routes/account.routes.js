@@ -1,9 +1,11 @@
 import express from 'express';
-import { HttpError, publicUser } from '../auth.js';
-import { hashPassword, verifyPassword, validatePassword, randomToken, sha256 } from '../security.js';
-import { planFor, trialEndsAt } from '../plans.js';
-import { deleteUserAndData } from '../admin.js';
-import { paging, pageResult } from './util.js';
+import { HttpError } from '../lib/errors.js';
+import { publicUser } from '../lib/serializers.js';
+import { hashPassword, verifyPassword, randomToken, sha256 } from '../lib/crypto.js';
+import { validatePassword } from '../lib/validation.js';
+import { planFor, trialEndsAt } from '../config/plans.js';
+import { deleteUserAndData } from '../services/user.service.js';
+import { paging, pageResult } from '../lib/pagination.js';
 
 const MAX_TOKENS = 20;
 

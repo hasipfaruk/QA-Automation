@@ -1,0 +1,33 @@
+{
+  "name": "@qa-automation/backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "QA Automation API server, scan worker, scanning engine and CLI.",
+  "type": "module",
+  "bin": {
+    "qa": "./bin/qa.js"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning src/server.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch-path=src --watch-path=../frontend/public src/server.js",
+    "setup": "playwright install chromium",
+    "seed": "node --disable-warning=ExperimentalWarning scripts/seed-demo.js",
+    "create-admin": "node --disable-warning=ExperimentalWarning scripts/create-admin.js",
+    "scan": "node bin/qa.js",
+    "demo": "node scripts/run-demo.js",
+    "test": "node --disable-warning=ExperimentalWarning --test tests/unit/*.test.js tests/integration/*.test.js"
+  },
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "@axe-core/playwright": "^4.13.0",
+    "express": "^5.2.1",
+    "pixelmatch": "^7.2.0",
+    "playwright": "^1.63.0",
+    "pngjs": "^7.0.0",
+    "stripe": "^23.0.0"
+  }
+}

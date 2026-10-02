@@ -1,8 +1,8 @@
 // Create the demo accounts for local evaluation.
 //   npm run seed
-import { loadDotEnv, readConfig } from '../src/config.js';
-import { openDatabase } from '../src/db.js';
-import { seedDemoUsers, DEMO_USERS } from '../src/seed.js';
+import { loadDotEnv, readConfig } from '../src/config/env.js';
+import { openDatabase } from '../src/db/index.js';
+import { seedDemoUsers, DEMO_USERS } from '../src/services/seed.service.js';
 
 loadDotEnv();
 const config = readConfig();

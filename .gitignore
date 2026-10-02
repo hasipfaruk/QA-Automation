@@ -1,12 +1,21 @@
+# Dependencies
 node_modules/
+
+# Runtime data (database, reports, visual baselines)
+data/
 reports/
 qa-baselines/
+
+# Local configuration and secrets
+.env
 qa.config.json
 auth-state.json
-.env
+
+# Logs
 *.log
-.DS_Store
-Thumbs.db
+
+# Editors and operating systems
 .vscode/
 .idea/
-data/
+.DS_Store
+Thumbs.db

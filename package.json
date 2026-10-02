@@ -2,33 +2,29 @@
   "name": "qa-automation",
   "version": "1.0.0",
   "private": true,
-  "description": "QA Automation: enterprise QA platform that crawls web apps, tests desktop, tablet and mobile, and delivers annotated reports with fixes.",
-  "type": "module",
-  "bin": {
-    "qa": "./backend/cli/qa.js"
-  },
-  "scripts": {
-    "start": "node --disable-warning=ExperimentalWarning backend/src/index.js",
-    "dev": "node --disable-warning=ExperimentalWarning --watch-path=backend --watch-path=frontend backend/src/index.js",
-    "setup": "playwright install chromium",
-    "seed": "node --disable-warning=ExperimentalWarning backend/scripts/seed-demo.js",
-    "create-admin": "node --disable-warning=ExperimentalWarning backend/scripts/create-admin.js",
-    "qa": "node backend/cli/qa.js",
-    "demo": "node demo/run-demo.js",
-    "test": "node --disable-warning=ExperimentalWarning --test tests/*.test.js",
-    "test:demo": "node demo/run-demo.js"
-  },
+  "description": "QA Automation: enterprise QA platform for websites and web applications.",
   "license": "UNLICENSED",
+  "workspaces": [
+    "backend"
+  ],
+  "scripts": {
+    "start": "npm run start -w backend",
+    "dev": "npm run dev -w backend",
+    "setup": "npm run setup -w backend",
+    "seed": "npm run seed -w backend",
+    "create-admin": "npm run create-admin -w backend --",
+    "scan": "npm run scan -w backend --",
+    "demo": "npm run demo -w backend",
+    "test": "npm test -w backend",
+    "lint": "eslint .",
+    "check": "npm run lint && npm test"
+  },
   "engines": {
     "node": ">=22.13"
   },
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.131.0",
-    "@axe-core/playwright": "^4.13.0",
-    "express": "^5.2.1",
-    "pixelmatch": "^7.2.0",
-    "playwright": "^1.63.0",
-    "pngjs": "^7.0.0",
-    "stripe": "^23.0.0"
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "eslint": "^9.39.5",
+    "globals": "^17.13.0"
   }
 }

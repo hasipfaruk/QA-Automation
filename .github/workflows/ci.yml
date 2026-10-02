@@ -6,8 +6,10 @@ on:
   pull_request:
 
 jobs:
-  test:
+  check:
+    name: Lint and test
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -16,18 +18,25 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
 
       - name: Unit and integration tests
         run: npm test
 
-      - name: CLI smoke test against the demo site
-        run: npm run test:demo
+      - name: Scanner smoke test
+        run: npm run demo
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload demo report
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: qa-report
-          path: reports/
+          name: demo-report
+          path: backend/reports/
           retention-days: 7

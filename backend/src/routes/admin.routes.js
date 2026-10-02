@@ -1,5 +1,5 @@
 import express from 'express';
-import { paging, pageResult, queryText } from './util.js';
+import { paging, pageResult, queryText } from '../lib/pagination.js';
 
 export function adminRoutes({ auth, audit, scans, admin }) {
   const router = express.Router();

@@ -1,7 +1,7 @@
 import express from 'express';
-import { HttpError } from '../auth.js';
-import { rateLimiter } from '../security.js';
-import { paging } from './util.js';
+import { HttpError } from '../lib/errors.js';
+import { rateLimiter } from '../lib/rate-limit.js';
+import { paging } from '../lib/pagination.js';
 
 /** Token-authenticated REST API for CI pipelines and integrations. */
 export function publicApiRoutes({ auth, scans }) {

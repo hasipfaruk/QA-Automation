@@ -1,10 +1,10 @@
 import express from 'express';
-import { HttpError, publicUser, safeNextPath } from '../auth.js';
-import { hashPassword, verifyPassword, rateLimiter, validateEmail, validatePassword } from '../security.js';
-import { publicPlans, planFor, trialEndsAt } from '../plans.js';
-
-// A valid hash of a random string, used so failed logins for unknown emails take as long as real ones.
-const DUMMY_HASH = 'scrypt$16384$8$1$c2FsdHNhbHRzYWx0c2FsdA==$' + Buffer.alloc(64).toString('base64');
+import { HttpError } from '../lib/errors.js';
+import { publicUser } from '../lib/serializers.js';
+import { hashPassword, verifyPassword, DUMMY_PASSWORD_HASH } from '../lib/crypto.js';
+import { rateLimiter } from '../lib/rate-limit.js';
+import { validateEmail, validatePassword, safeNextPath } from '../lib/validation.js';
+import { publicPlans, planFor, trialEndsAt } from '../config/plans.js';
 
 export function sessionRoutes({ db, config, auth, audit }) {
   const router = express.Router();
@@ -59,7 +59,7 @@ export function sessionRoutes({ db, config, auth, audit }) {
     limit(req);
     const email = String(req.body?.email || '').trim().toLowerCase();
     const user = q.byEmail.get(email);
-    const ok = await verifyPassword(String(req.body?.password || ''), user?.password_hash || DUMMY_HASH);
+    const ok = await verifyPassword(String(req.body?.password || ''), user?.password_hash || DUMMY_PASSWORD_HASH);
     if (!user || !ok) {
       audit.record(req, 'user.login_failed', { actor: { id: user?.id ?? null, email }, targetType: 'user', targetId: user?.id ?? null });
       throw new HttpError(401, 'Email or password is incorrect.');
