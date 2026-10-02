@@ -1,39 +1,24 @@
 {
   "name": "qa-automation",
   "version": "1.0.0",
-  "description": "Automated QA for web apps: a hosted dashboard and CLI that crawl pages, test desktop/tablet/mobile, and produce annotated screenshot reports with fixes.",
+  "private": true,
+  "description": "QA Automation: enterprise QA platform that crawls web apps, tests desktop, tablet and mobile, and delivers annotated reports with fixes.",
   "type": "module",
   "bin": {
-    "qa": "./bin/qa.js"
+    "qa": "./backend/cli/qa.js"
   },
   "scripts": {
-    "start": "node --disable-warning=ExperimentalWarning server/index.js",
-    "dev": "node --disable-warning=ExperimentalWarning --watch-path=server --watch-path=src server/index.js",
+    "start": "node --disable-warning=ExperimentalWarning backend/src/index.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch-path=backend --watch-path=frontend backend/src/index.js",
     "setup": "playwright install chromium",
-    "qa": "node bin/qa.js",
+    "seed": "node --disable-warning=ExperimentalWarning backend/scripts/seed-demo.js",
+    "create-admin": "node --disable-warning=ExperimentalWarning backend/scripts/create-admin.js",
+    "qa": "node backend/cli/qa.js",
     "demo": "node demo/run-demo.js",
-    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js",
+    "test": "node --disable-warning=ExperimentalWarning --test tests/*.test.js",
     "test:demo": "node demo/run-demo.js"
   },
-  "keywords": [
-    "qa",
-    "testing",
-    "playwright",
-    "accessibility",
-    "axe-core",
-    "visual-regression",
-    "e2e",
-    "web-audit"
-  ],
-  "homepage": "https://github.com/hasipfaruk/QA-Automation#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hasipfaruk/QA-Automation.git"
-  },
-  "bugs": {
-    "url": "https://github.com/hasipfaruk/QA-Automation/issues"
-  },
-  "license": "MIT",
+  "license": "UNLICENSED",
   "engines": {
     "node": ">=22.13"
   },

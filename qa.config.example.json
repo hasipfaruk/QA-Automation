@@ -49,6 +49,6 @@
     }
   ],
 
-  "ai": { "enabled": false, "model": "claude-opus-5-5", "effort": "medium", "maxScreens": 20 },
+  "ai": { "enabled": false, "effort": "medium", "maxScreens": 20 },
   "visual": { "enabled": false, "threshold": 0.5, "baselineDir": "qa-baselines" }
 }

@@ -1,99 +1,174 @@
 # QA Automation
 
-[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)](.github/workflows/ci.yml)
-![Node](https://img.shields.io/badge/node-%3E%3D22.13-339933?logo=node.js&logoColor=white)
-![Playwright](https://img.shields.io/badge/Playwright-1.x-2EAD33?logo=playwright&logoColor=white)
-![License](https://img.shields.io/badge/license-MIT-blue)
+Enterprise quality assurance platform for websites and web applications.
 
-Automated QA for websites and web apps, as a hosted SaaS and a command-line tool. Point it at a URL and it crawls the site, tests every page on desktop, tablet and mobile in a real browser, and produces a report with annotated screenshots showing what is broken, where it is, and how to fix it.
+QA Automation crawls a site, tests every page on desktop, tablet and mobile in a real browser, and delivers a prioritised fix list with annotated screenshots. Customers use it through a hosted dashboard, a REST API for CI pipelines, or the command-line scanner.
 
-It tests the rendered app the way a user sees it, so it works with any stack that runs in a browser, whatever language the backend is written in.
+![Sample report](frontend/site/assets/img/sample-report.jpg)
 
-![Sample report](docs/assets/img/sample-report.jpg)
+> **Proprietary software.** This repository is not open source. See [LICENSE](LICENSE).
 
-## Features
+---
 
-- **Crawler** that discovers pages by following links, with include/exclude filters and depth limits
-- **Multi-device testing** at desktop (1440px), laptop, tablet and mobile sizes, with touch emulation
-- **Annotated screenshots**: every problem gets a numbered box on the full-page screenshot, plus a close-up image of each issue
-- **Checks across 9 areas**
+## Contents
 
-  | Area | Examples |
-  |---|---|
-  | Functional | Pages that fail to load, scripted user flows (login, forms, checkout) |
-  | JavaScript | Uncaught exceptions, console errors and warnings |
-  | Network | 4xx/5xx responses, failed requests, broken links and images, mixed content |
-  | Layout | Horizontal overflow, overlapping controls, clipped text, small tap targets, distorted images |
-  | Accessibility | WCAG 2.2 A/AA via axe-core (contrast, labels, alt text, ARIA) |
-  | Performance | Load time, LCP, CLS, page weight, oversized images |
-  | SEO | Title, meta description, H1, heading order, lang, Open Graph, noindex |
-  | Visual regression | Pixel diff against approved baseline screenshots |
-  | AI review (optional) | Claude reviews screenshots for alignment, consistency, copy and UX problems |
+- [Capabilities](#capabilities)
+- [Architecture](#architecture)
+- [Quick start](#quick-start)
+- [Demo accounts](#demo-accounts)
+- [Administration](#administration)
+- [Plans](#plans)
+- [Configuration](#configuration)
+- [Billing](#billing)
+- [REST API](#rest-api)
+- [Command-line scanner](#command-line-scanner)
+- [Deployment](#deployment)
+- [Security](#security)
+- [Testing](#testing)
+- [Project structure](#project-structure)
 
-- **Reports** as interactive HTML, Markdown (for tickets) and JSON (for tooling)
-- **CI friendly**: exits with code 1 when critical issues are found
+---
 
-## Two ways to use it
+## Capabilities
 
-| | Hosted web app (SaaS) | Command line |
-|---|---|---|
-| For | Your customers | Developers and CI pipelines |
-| How | Sign up, paste a URL, click **Start scan** | `node bin/qa.js https://site.com` |
-| Includes | Accounts, scan history, plans and Stripe billing, API tokens, shareable reports | Full scanner with config files and local reports |
+| Area | What is checked |
+|---|---|
+| Functional | Pages that fail to load, scripted user flows (login, search, checkout) |
+| JavaScript | Uncaught exceptions, console errors and warnings |
+| Network | 4xx/5xx responses, failed requests, broken links and images, mixed content |
+| Layout and responsive | Horizontal overflow, overlapping controls, clipped text, small tap targets, distorted images |
+| Accessibility | WCAG 2.2 A/AA rules: contrast, labels, alternative text, ARIA, keyboard access |
+| Performance | Load time, Largest Contentful Paint, Cumulative Layout Shift, page weight, oversized images |
+| SEO | Title, description, headings, language, social tags, accidental noindex |
+| Visual regression | Pixel comparison against approved baselines with diff images |
+| AI design review | Optional review of screenshots for alignment, consistency, copy and usability problems |
 
-## Hosted web app
+Every scan produces an interactive HTML report, a Markdown fix list for issue trackers and JSON results for integrations.
 
-### Run it locally
+## Architecture
 
-Requires Node.js 22.13 or newer.
+```
+            Browser                                   CI pipelines / scripts
+               |                                               |
+        frontend/ (static)                            REST API  /api/v1  (API tokens)
+        site/  marketing pages                                 |
+        app/   dashboard + admin  ---- JSON  /api ----+--------+
+                                                      |
+                                       backend/src  (Express)
+                                       auth, plans, billing, admin, audit
+                                                      |
+                                    SQLite  <-- queue --> worker
+                                                            |
+                                              backend/scanner (headless browser)
+                                                            |
+                                         egress proxy (public internet only)
+```
+
+- **Frontend** (`frontend/`): static HTML, CSS and JavaScript modules with no build step. The dashboard and admin panel talk to the backend only through the JSON API.
+- **Backend** (`backend/`): Node.js and Express. Serves the API, the frontend files and sandboxed reports. A background worker runs scans; web and worker can run as separate processes.
+- **Storage**: SQLite (built into Node.js) in `DATA_DIR`, plus report files and visual baselines on disk.
+
+## Quick start
+
+Requirements: Node.js 22.13 or newer.
 
 ```bash
-git clone https://github.com/hasipfaruk/QA-Automation.git
-cd QA-Automation
 npm install
-npm run setup          # downloads Chromium for Playwright
-cp .env.example .env   # optional: adjust settings
+npm run setup          # downloads the browser engine used for scanning
+cp .env.example .env   # adjust settings if needed
 npm start
 ```
 
-Open http://localhost:3000, create an account and run a scan. Without Stripe keys the app runs in development mode and the Billing page lets you switch plans freely to try every feature.
+Open http://localhost:3000 and log in with one of the demo accounts below.
 
-### Features
+For development with automatic restarts use `npm run dev`.
 
-- **Accounts**: sign up, log in, change password, delete account. Passwords are hashed with scrypt; sessions are stored server-side in HTTP-only cookies.
-- **Dashboard**: paste a URL, pick devices and options, watch live progress, read the result.
-- **Scan history**: every scan is saved with score and issue counts. Full reports open from private share links.
-- **Plans and billing**: Free, Pro and Business plans with monthly scan limits, enforced on every request. Payments, upgrades and cancellations run through Stripe Checkout and the Stripe customer portal.
-- **REST API and API tokens**: start scans from CI or any programming language. Examples are on the in-app API page.
-- **User flows and login steps** (paid plans): scripted journeys such as checkout or search, plus login steps for pages behind authentication.
+## Demo accounts
 
-### Plans
+In development the demo accounts are created automatically on start (`SEED_DEMO_USERS`, default on outside production). You can also create them with `npm run seed`.
 
-Limits live in [`server/plans.js`](server/plans.js). Change them there.
-
-| | Free | Pro | Business |
+| Role | Email | Password | Plan |
 |---|---|---|---|
-| Scans per month | 10 | 200 | 1,500 |
-| Pages per scan | 5 | 50 | 200 |
-| Devices | desktop, mobile | all 4 | all 4 |
-| Parallel scans | 1 | 2 | 4 |
-| User flows, login, visual regression, AI review | - | yes | yes |
-| Report retention | 7 days | 30 days | 90 days |
+| Administrator | `admin@example.com` | `Admin-demo-2026!` | Enterprise |
+| Customer | `demo@example.com` | `Demo-user-2026!` | Pro |
+| Customer (trial) | `trial@example.com` | `Trial-user-2026!` | Trial |
 
-### Setting up Stripe
+These accounts are for local evaluation only. They are never created in production unless `SEED_DEMO_USERS=true` is set explicitly, which you should not do on a public server.
 
-1. In the Stripe dashboard create two products with monthly recurring prices (Pro and Business). Copy their price IDs (`price_...`).
-2. Set `STRIPE_SECRET_KEY`, `STRIPE_PRICE_PRO` and `STRIPE_PRICE_BUSINESS` in `.env`.
-3. Add a webhook endpoint pointing to `https://your-domain/stripe/webhook` with the events
-   `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated` and `customer.subscription.deleted`.
-   Put its signing secret in `STRIPE_WEBHOOK_SECRET`.
-4. Turn on the customer portal in Stripe (**Settings > Billing > Customer portal**) so users can change or cancel plans.
+Without payment keys the Billing page runs in development mode, so plans can be switched freely to try every feature.
 
-For local testing use the Stripe CLI: `stripe listen --forward-to localhost:3000/stripe/webhook`.
+## Administration
 
-### REST API
+Administrators see an **Admin** entry in the top navigation (`/app/admin`).
 
-Create a token on the **API** page, then:
+| Section | What it does |
+|---|---|
+| Overview | Customers, estimated monthly recurring revenue, scans today and per day, queue status, failed scans, average score, plan distribution |
+| Users | Search and filter all accounts by plan, role and status |
+| User detail | Change plan, promote to administrator, suspend or reactivate, end all sessions, delete the account and its data; view usage, API tokens and recent scans |
+| Scans | Every scan across all customers, with filters, report links and deletion |
+| Audit log | Append-only record of logins, failed and blocked logins, password changes, API token changes, billing changes and every administrator action |
+
+Safeguards: administrators cannot change their own role or status, the last active administrator cannot be removed, and suspending an account immediately ends its sessions and blocks its API tokens.
+
+Create the first production administrator from the server:
+
+```bash
+npm run create-admin -- --email you@company.com
+```
+
+A strong password is generated and printed once. Pass `--password` to set your own, or run the command for an existing account to promote it.
+
+## Plans
+
+Plan limits are defined in [`backend/src/plans.js`](backend/src/plans.js).
+
+| | Trial | Pro | Business | Enterprise |
+|---|---|---|---|---|
+| Price | Free for 14 days | $49 / month | $199 / month | Custom |
+| Scans | 10 per trial | 300 / month | 2,000 / month | 20,000 / month |
+| Pages per scan | 5 | 50 | 200 | 1,000 |
+| Devices | desktop, mobile | all 4 | all 4 | all 4 |
+| Parallel scans | 1 | 2 | 5 | 10 |
+| User flows, login steps, visual regression, AI review | - | Yes | Yes | Yes |
+| Report retention | 7 days | 30 days | 90 days | 365 days |
+
+New accounts start on the Trial plan. After 14 days scanning stops until the customer upgrades. Enterprise is assigned by an administrator and is not sold through self-serve checkout.
+
+## Configuration
+
+All settings are environment variables; see [`.env.example`](.env.example).
+
+| Variable | Default | Description |
+|---|---|---|
+| `APP_URL` | `http://localhost:3000` | Public URL, used for report links and payment redirects |
+| `PORT` | `3000` | HTTP port |
+| `NODE_ENV` | `development` | Set to `production` on servers |
+| `DATA_DIR` | `data` | Database, reports and baselines |
+| `ROLE` | `all` | `web`, `worker` or `all` |
+| `WORKER_CONCURRENCY` | `2` | Scans run in parallel per worker |
+| `TRUST_PROXY` | `false` | Enable behind a reverse proxy or load balancer |
+| `SIGNUPS_OPEN` | `true` | Allow new sign ups |
+| `ALLOW_PRIVATE_URLS` | `true` in development, `false` in production | Allow scanning private and local addresses |
+| `SEED_DEMO_USERS` | `true` in development, `false` in production | Create the demo accounts on start |
+| `SALES_EMAIL`, `SUPPORT_EMAIL` | example addresses | Contact addresses shown in the product |
+| `AI_API_KEY`, `AI_MODEL` | empty | Enables the AI design review |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_PRO`, `STRIPE_PRICE_BUSINESS` | empty | Online billing |
+
+## Billing
+
+Payments use Stripe Checkout and the Stripe customer portal.
+
+1. Create two products with monthly recurring prices (Pro and Business) and copy their price IDs.
+2. Set `STRIPE_SECRET_KEY`, `STRIPE_PRICE_PRO` and `STRIPE_PRICE_BUSINESS`.
+3. Add a webhook endpoint `https://your-domain/stripe/webhook` with the events `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated` and `customer.subscription.deleted`, and set `STRIPE_WEBHOOK_SECRET` to its signing secret.
+4. Enable the customer portal so customers can change or cancel their plan.
+
+Webhooks are verified by signature and processed once per event. When a subscription ends the account returns to the Trial plan.
+
+## REST API
+
+Customers create API tokens on the **API** page. Tokens are shown once and stored only as hashes.
 
 ```bash
 curl -X POST https://your-domain/api/v1/scans \
@@ -106,146 +181,111 @@ curl https://your-domain/api/v1/scans/SCAN_ID -H "Authorization: Bearer $QA_TOKE
 
 | Endpoint | Description |
 |---|---|
-| `GET /api/v1/me` | Plan and monthly usage |
-| `POST /api/v1/scans` | Start a scan. Fields: `url`, `viewports`, `maxPages`, `checkExternalLinks`, `ai`, `visual` (`off`, `compare`, `update`), `flows`, `login` |
-| `GET /api/v1/scans` | List scans (`limit`, `offset`) |
+| `GET /api/v1/me` | Plan and usage |
+| `POST /api/v1/scans` | Start a scan: `url`, `viewports`, `maxPages`, `checkExternalLinks`, `ai`, `visual` (`off`, `compare`, `update`), `flows`, `login` |
+| `GET /api/v1/scans` | List scans (`page`, `limit`) |
 | `GET /api/v1/scans/:id` | Status, score, summary, `reportUrl`, `markdownUrl` |
 | `POST /api/v1/scans/:id/rerun` | Run the same scan again |
 | `DELETE /api/v1/scans/:id` | Delete a scan and its report |
 
-Errors return JSON `{ "error": "..." }`. Status `402` means the request needs a higher plan; `429` means a limit was hit.
+Errors are returned as `{ "error": "..." }`. `402` means the request needs a higher plan, `429` means a limit was reached.
 
-### Deploying
+## Command-line scanner
 
-The included `Dockerfile` is based on the official Playwright image, so Chromium and its system libraries are already installed.
-
-```bash
-cp .env.example .env    # set APP_URL, NODE_ENV=production, Stripe keys
-docker compose up -d --build
-```
-
-Works on any host that runs Docker containers with a persistent volume (a VPS, Railway, Render, Fly.io and similar). Put it behind HTTPS and set `TRUST_PROXY=true` when a proxy or load balancer sits in front.
-
-The SQLite database, reports and baselines live in `DATA_DIR` (`/data` in Docker). Back up that folder.
-
-To scale, run one web process (`ROLE=web`) and one or more scanner processes (`ROLE=worker`) on the same machine and data folder.
-
-### Security model
-
-Scanning URLs that users submit is risky for the server, so the hosted app is locked down:
-
-- **Network isolation**: in production every browser request goes through a built-in egress proxy ([`src/net/egress-proxy.js`](src/net/egress-proxy.js)). It resolves each host and refuses loopback, private, link-local and cloud metadata addresses, including after redirects. `ALLOW_PRIVATE_URLS` must stay `false` on a public server.
-- **Restricted flows**: user flows cannot upload server files or read server environment variables.
-- **Sandboxed reports**: reports are served from unguessable links with a `sandbox` Content-Security-Policy, so report scripts cannot access the app session.
-- **Web security**: CSRF tokens on every form, strict CSP, rate-limited login, hashed API tokens and sessions, open-redirect protection.
-- Use dedicated test accounts for login steps. Credentials in scan options are stored in the database so scans can be re-run.
-
-## Command line
-
-After `npm install` and `npm run setup`, run the bundled demo. It serves a small site that has bugs on purpose, then tests it:
+The scanner can also run on its own, without the web application.
 
 ```bash
-npm run demo -- --open
-```
-
-### Usage
-
-```bash
-node bin/qa.js https://example.com --open
+node backend/cli/qa.js https://example.com --open
+node backend/cli/qa.js --only https://example.com/pricing -v mobile
+npm run demo -- --open      # scans a bundled demo site with known bugs
 ```
 
 | Option | Description |
 |---|---|
-| `-c, --config <file>` | JSON config file (defaults to `./qa.config.json` if present) |
+| `-c, --config <file>` | JSON config file (`qa.config.example.json` shows every option) |
 | `-p, --max-pages <n>` | Maximum pages to crawl (default 15) |
-| `-d, --max-depth <n>` | Maximum link depth from the start URL (default 3) |
-| `-v, --viewports <list>` | Comma separated: `desktop,laptop,tablet,mobile` |
-| `--only <url>` | Test only this URL, no crawling (repeatable) |
-| `--ai` | Enable the Claude screenshot review (needs `ANTHROPIC_API_KEY`) |
-| `--visual` | Compare screenshots against saved baselines |
-| `--update-baseline` | Save the current screenshots as the new baselines |
-| `--no-external` | Skip checking external links |
-| `--headed` | Show the browser window while testing |
-| `--concurrency <n>` | Number of pages tested in parallel (default 3) |
-| `-o, --out <dir>` | Output directory (default `reports`) |
+| `-d, --max-depth <n>` | Maximum link depth (default 3) |
+| `-v, --viewports <list>` | `desktop,laptop,tablet,mobile` |
+| `--only <url>` | Test only this URL (repeatable) |
+| `--ai` | AI design review (needs `AI_API_KEY`) |
+| `--visual` / `--update-baseline` | Compare with or save visual baselines |
+| `--no-external` | Skip external link checks |
+| `--headed` | Show the browser |
+| `-o, --out <dir>` | Output folder (default `reports`) |
 | `--open` | Open the HTML report when finished |
 
-Examples:
+Reports are written to `reports/<host>_<timestamp>/` as `report.html`, `REPORT.md`, `results.json` and `screenshots/`. The process exits with code 1 when critical issues are found, so it can gate CI builds.
+
+## Deployment
+
+The `Dockerfile` builds a production image with the browser engine and all system libraries included.
 
 ```bash
-# Local dev server, phones only
-node bin/qa.js http://localhost:5173 -v mobile
-
-# Specific pages only
-node bin/qa.js --only https://example.com/pricing --only https://example.com/checkout
-
-# Visual regression
-node bin/qa.js https://example.com --update-baseline   # first run: approve baselines
-node bin/qa.js https://example.com --visual            # later runs: compare
+cp .env.example .env    # set APP_URL, NODE_ENV=production and billing keys
+docker compose up -d --build
+docker compose exec app npm run create-admin -- --email you@company.com
 ```
 
-### Configuration
+Any host that runs containers with a persistent volume works (virtual server, Railway, Render, Fly.io and similar). Terminate HTTPS in front of the app and set `TRUST_PROXY=true`. Back up the `/data` volume.
 
-Copy [`qa.config.example.json`](qa.config.example.json) to `qa.config.json` and adjust it. The main sections are:
+To scale, run one `ROLE=web` process and one or more `ROLE=worker` processes sharing the same data volume.
 
-- `auth`: log in once before testing, either with `loginUrl` and `steps` or with a saved Playwright `storageState`. Use `${ENV:NAME}` to read secrets from environment variables so passwords never live in the file.
-- `flows`: scripted user journeys. Each step is one action:
-  `goto`, `click`, `fill`, `type`, `select`, `check`, `uncheck`, `hover`, `press`, `upload`, `wait`,
-  `expectText`, `expectNoText`, `expectVisible`, `expectUrl`.
-  Selectors can be CSS (`#email`) or Playwright text selectors (`text=Sign in`).
-- `thresholds`: performance and usability limits (load time, LCP, CLS, page weight, tap target and font sizes).
-- `ai`: model, effort and `maxScreens`, which caps how many page/device combinations are sent for review.
-- `visual`: diff `threshold` in percent of changed pixels and the `baselineDir`.
-- `failOn`: `critical`, `high` or `none`, which controls the exit code.
+## Security
 
-### Output
+The platform runs untrusted URLs and user-defined browser flows, so it is locked down by default:
 
-Each run writes to `reports/<host>_<timestamp>/`:
+- **Network isolation**: every browser request goes through a built-in egress proxy that blocks loopback, private, link-local and cloud metadata addresses, including after redirects.
+- **Restricted flows**: hosted flows cannot upload server files or read server environment variables, and typed values are redacted from all API responses.
+- **Sandboxed reports**: reports are served from unguessable links under a `sandbox` Content-Security-Policy, isolated from the application session.
+- **Accounts**: scrypt password hashing, HTTP-only session cookies, CSRF tokens on every state-changing request, rate-limited login, account suspension, role-based access control.
+- **Auditing**: an append-only audit log of security-relevant and administrative events.
 
-| File | Contents |
-|---|---|
-| `report.html` | Overview score, prioritised fix list, page-by-page annotated screenshots, user flow steps |
-| `REPORT.md` | The fix list in Markdown, ready to paste into Jira or GitHub issues |
-| `results.json` | Raw results for dashboards or other tools |
-| `screenshots/` | Clean and annotated full-page captures, issue close-ups, flow steps, visual diffs |
+See [SECURITY.md](SECURITY.md) for the full list of controls, the deployment checklist and how to report a vulnerability.
 
-## Roadmap
+## Testing
 
-- [x] Web app scanning across desktop, tablet and mobile
-- [x] Accessibility, layout, network, performance and SEO checks
-- [x] Scripted user flows with login support
-- [x] Visual regression and AI screenshot review
-- [ ] API testing (REST and GraphQL)
-- [ ] Scheduled monitoring with alerts
-- [x] Hosted web app with accounts, scan history, plans, billing and REST API
-- [ ] Team workspaces and email notifications
-- [ ] Password reset by email
+```bash
+npm test             # unit and integration tests (starts the app, runs real scans)
+npm run test:demo    # command-line scanner against the demo site
+```
 
-## Website
-
-The product landing page lives in [`docs/`](docs/index.html) as plain HTML, CSS and JavaScript. To publish it, enable GitHub Pages in **Settings > Pages** with source `main` and folder `/docs`.
+CI runs both suites on every push (`.github/workflows/ci.yml`).
 
 ## Project structure
 
 ```
-bin/qa.js                     CLI entry point
-src/runner.js                 crawler and per-page test pipeline
-src/checks/inpage.js          layout, image, SEO, performance and link checks (run in the page)
-src/checks/accessibility.js   axe-core scan
-src/checks/visual.js          baseline screenshot comparison
-src/checks/ai-review.js       Claude screenshot review
-src/flows.js                  login and scripted user flows
-src/rules.js                  titles, severities and fix guidance for every check
-src/report/                   scoring, HTML and Markdown reports
-src/net/egress-proxy.js       network filter that keeps scans on the public internet
-server/                       hosted web app: routes, auth, scans, worker, billing, views
-server/plans.js               plan limits
-test/                         unit and integration tests (`npm test`)
-demo/                         demo site with known bugs
-docs/                         product landing page (also served by the web app)
-Dockerfile                    production image
+backend/
+  src/                    web application
+    index.js              entry point (web server and worker)
+    app.js                routes, security headers, static frontend, reports
+    routes/               session, account, admin and public API routes
+    auth.js               sessions, CSRF, roles, API tokens
+    admin.js              administration service
+    audit.js              audit log
+    billing.js            subscriptions and webhooks
+    plans.js              plan catalogue and limits
+    scans.js              scan validation, limits and storage
+    worker.js             background scan worker
+    db.js                 schema and migrations
+    seed.js               demo accounts
+  scanner/                scanning engine
+    runner.js             crawler and per-page test pipeline
+    checks/               layout, accessibility, visual and AI checks
+    net/egress-proxy.js   network isolation for scans
+    flows.js              user flows and login steps
+    report/               scoring and report generation
+  cli/qa.js               command-line scanner
+  scripts/                create-admin and seed scripts
+frontend/
+  site/                   marketing website
+  app/                    dashboard and admin panel
+    assets/js/core/       API client, templating, layout
+    assets/js/pages/      customer pages
+    assets/js/pages/admin administration pages
+tests/                    unit and integration tests
+demo/                     demo website with known bugs
 ```
 
 ## License
 
-[MIT](LICENSE)
+Proprietary. Copyright (c) 2026 QA Automation. All rights reserved. See [LICENSE](LICENSE).

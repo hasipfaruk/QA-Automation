@@ -2,8 +2,8 @@
 //   npm run demo
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadConfig } from '../src/config.js';
-import { runQA } from '../src/runner.js';
+import { loadConfig } from '../backend/scanner/config.js';
+import { runQA } from '../backend/scanner/runner.js';
 import { startDemoServer } from './server.js';
 
 const demoDir = path.dirname(fileURLToPath(import.meta.url));

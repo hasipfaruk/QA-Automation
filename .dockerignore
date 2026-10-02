@@ -5,6 +5,6 @@ qa-baselines
 .git
 .github
 .env
-test
+tests
 demo
 *.log
