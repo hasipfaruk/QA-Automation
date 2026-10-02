@@ -1,0 +1,10 @@
+node_modules
+data
+reports
+qa-baselines
+.git
+.github
+.env
+test
+demo
+*.log

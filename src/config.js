@@ -57,7 +57,12 @@ export function loadConfig(cliOpts) {
     fileCfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
     fileCfg._configDir = path.dirname(path.resolve(cfgPath));
   }
-  const cfg = deepMerge(deepMerge(DEFAULTS, fileCfg), cliOpts.overrides);
+  return buildConfig(deepMerge(fileCfg, cliOpts.overrides));
+}
+
+/** Build a full config from plain options without touching the filesystem (used by the server). */
+export function buildConfig(options) {
+  const cfg = deepMerge(DEFAULTS, options);
   if (!cfg.url) throw new Error('No URL given. Use: qa <url>  or set "url" in qa.config.json');
   if (!/^https?:\/\//i.test(cfg.url)) cfg.url = 'https://' + cfg.url;
   for (const v of cfg.viewports) {

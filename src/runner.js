@@ -18,7 +18,7 @@ const MAX_SHOT_HEIGHT = 16000;
 const MAX_CROPS = 30;
 const FREEZE_CSS = '*,*::before,*::after{animation-duration:0s!important;animation-delay:0s!important;transition:none!important;caret-color:transparent!important;scroll-behavior:auto!important}';
 
-const log = (...a) => console.log(...a);
+let log = (...a) => console.log(...a);
 const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
 const paint = (code) => (s) => (useColor ? `\x1b[${code}m${s}\x1b[0m` : String(s));
 const bold = paint('1');
@@ -46,18 +46,26 @@ export async function runQA(cfg) {
   const started = new Date();
   const host = new URL(cfg.url).hostname.replace(/[^a-z0-9.-]/gi, '_');
   const stamp = started.toISOString().replace(/[:T]/g, '-').slice(0, 19);
-  const outDir = path.resolve(cfg.outDir, `${host}_${stamp}`);
+  const outDir = cfg.reportDir ? path.resolve(cfg.reportDir) : path.resolve(cfg.outDir, `${host}_${stamp}`);
   const shotDir = path.join(outDir, 'screenshots');
   fs.mkdirSync(shotDir, { recursive: true });
 
+  log = cfg.quiet ? () => {} : (...a) => console.log(...a);
   log(`\n${bold('QA Automation')}  ${cfg.url}`);
   log(`   devices: ${cfg.viewports.join(', ')} | max pages: ${cfg.only ? cfg.only.length : cfg.maxPages} | AI review: ${cfg.ai.enabled ? 'on' : 'off'} | visual regression: ${cfg.visual.enabled ? 'on' : 'off'}`);
   log(`   output: ${outDir}\n`);
 
-  const browser = await chromium.launch({ headless: cfg.headless, channel: 'chromium' });
+  // With an egress proxy every browser request (including redirects) is filtered by the proxy.
+  // "<-loopback>" stops Chromium from silently bypassing the proxy for localhost.
+  const browser = await chromium.launch({
+    headless: cfg.headless,
+    channel: 'chromium',
+    ...(cfg.egressProxy ? { proxy: { server: cfg.egressProxy, bypass: '<-loopback>' } } : {}),
+  });
   const state = {
     cfg, browser, outDir, shotDir,
     linkCache: new Map(),
+    progress: { done: 0 },
     aiScreensLeft: cfg.ai.maxScreens,
     aiDisabledReason: null,
     aiUsage: { input: 0, output: 0 },
@@ -105,13 +113,13 @@ export async function runQA(cfg) {
     const htmlPath = writeHtmlReport(run, outDir);
     const mdPath = writeMarkdownReport(run, outDir);
 
-    printSummary(run, htmlPath, mdPath);
+    if (!cfg.quiet) printSummary(run, htmlPath, mdPath);
     if (cfg.open) openFile(htmlPath);
 
     const failOn = cfg.failOn ?? 'critical';
     const failing = failOn === 'none' ? 0
       : run.summary.bySeverity.critical + (failOn === 'high' ? run.summary.bySeverity.high : 0);
-    return { exitCode: failing > 0 ? 1 : 0, run, htmlPath };
+    return { exitCode: failing > 0 ? 1 : 0, run, htmlPath, mdPath, outDir };
   } finally {
     await browser.close();
   }
@@ -192,6 +200,8 @@ async function testUrlAllViewports(state, url, idx, total) {
     const badge = ['critical', 'high', 'medium', 'low'].filter((s) => counts[s]).map((s) => sevColor[s](`${counts[s]} ${s}`)).join(', ') || green('clean');
     log(`  [page ${idx}] ${vp.padEnd(7)} ${shortUrl(url)}  ${badge}`);
     out.push(r);
+    state.progress.done++;
+    state.cfg.hooks?.onProgress?.({ screensDone: state.progress.done, pagesStarted: idx, pageLimit: total, url, viewport: vp });
   }
   return out;
 }
@@ -445,6 +455,7 @@ async function checkLinks(state, page, links) {
   const { cfg } = state;
   const origin = new URL(cfg.url).hostname;
   const ctx = {};
+  const guard = cfg.networkGuard;
   const todo = links.filter((l) => {
     const internal = sameSite(new URL(l.href).hostname, origin);
     return internal || cfg.checkExternalLinks;
@@ -453,8 +464,10 @@ async function checkLinks(state, page, links) {
   const check = (href) => {
     if (!state.linkCache.has(href)) {
       state.linkCache.set(href, (async () => {
-        const opts = { timeout: 15000, maxRedirects: 10, failOnStatusCode: false };
+        // with a guard, never follow redirects: the target could be an internal address
+        const opts = { timeout: 15000, maxRedirects: guard ? 0 : 10, failOnStatusCode: false };
         try {
+          if (guard && !(await guard(href))) return { skipped: true };
           let res = await page.request.head(href, opts);
           if (res.status() >= 400) res = await page.request.get(href, opts);
           return { status: res.status() };
@@ -474,6 +487,7 @@ async function checkLinks(state, page, links) {
       const r = res[j];
       const internal = sameSite(new URL(l.href).hostname, origin);
       // 401/403/429/999 usually mean "bot blocked", not "broken"
+      if (r.skipped) return;
       const broken = r.error ? true : [404, 410].includes(r.status) || r.status >= 500;
       if (broken) issues.push(makeIssue('broken-link', ctx, { href: l.href, status: r.status, error: r.error, internal }, { selector: l.selector, element: l.element, rect: l.rect }));
     });

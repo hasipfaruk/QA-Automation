@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DATA_DIR: /data
+    volumes:
+      - qa-data:/data
+    # Chromium needs more shared memory than Docker's 64 MB default
+    shm_size: "1gb"
+    init: true
+
+volumes:
+  qa-data:

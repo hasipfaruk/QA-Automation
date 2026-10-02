@@ -1,16 +1,19 @@
 {
   "name": "qa-automation",
   "version": "1.0.0",
-  "description": "Automated QA for websites and web apps: crawls pages, tests desktop/tablet/mobile, and produces an annotated screenshot report with fixes.",
+  "description": "Automated QA for web apps: a hosted dashboard and CLI that crawl pages, test desktop/tablet/mobile, and produce annotated screenshot reports with fixes.",
   "type": "module",
   "bin": {
     "qa": "./bin/qa.js"
   },
   "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server/index.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch-path=server --watch-path=src server/index.js",
     "setup": "playwright install chromium",
     "qa": "node bin/qa.js",
     "demo": "node demo/run-demo.js",
-    "test": "node demo/run-demo.js"
+    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js",
+    "test:demo": "node demo/run-demo.js"
   },
   "keywords": [
     "qa",
@@ -32,13 +35,15 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=18"
+    "node": ">=22.13"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",
     "@axe-core/playwright": "^4.13.0",
+    "express": "^5.2.1",
     "pixelmatch": "^7.2.0",
     "playwright": "^1.63.0",
-    "pngjs": "^7.0.0"
+    "pngjs": "^7.0.0",
+    "stripe": "^23.0.0"
   }
 }
